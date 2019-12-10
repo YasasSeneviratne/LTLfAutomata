@@ -1,0 +1,7 @@
+#F a -> F b
+#((! (F a)) || (F b))
+#NNF format
+#((G (! a)) || (F b))
+m2l-str;
+var2 A, B;
+(((ex1 x1: (0 <= x1 & ((x1 in B))))) | ((all1 x1: ((0 <= x1) => (~((x1 in A)))))));

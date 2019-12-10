@@ -1,0 +1,3 @@
+These are MONA inputs converted from the LTLf specification patterns used in: https://arxiv.org/pdf/1811.03176.pdf
+
+The first line of each file is a comment with the original formula in LTLf.
