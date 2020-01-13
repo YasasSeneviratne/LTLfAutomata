@@ -5,7 +5,7 @@ The purpose of this tool is to parse the output of MONA and generate DFAs for pr
 Author: Tommy Tracy II
 Email: tjt7a@virginia.edu
 Date: 9 December 2019
-Version: 0.0.1
+**Under Development**
 
 To generate MONA output:
 ./mona -w -e <first order logic input file> > <MONA output file>
@@ -14,12 +14,30 @@ To generate MONA output:
 # Imports
 import sys
 import re
+import networkx as nx
+import matplotlib.pyplot as plt
+from networkx.drawing.nx_agraph import to_agraph 
 
 # Get the usage string
 def usage():
     usage = "----------------- Usage ----------------\n"
     usage += "./MONAtoDFA.py <MONA input file> <DFA output file>"
     return usage
+
+# Generate a graph from the transitions
+def generate_graph(transitions, filename):
+
+    G = nx.MultiDiGraph()
+
+    # Add an edge from state src to state dest with transition_alphabet edge label
+    for (src, dest), transition_alphabet in transitions.items():
+        G.add_edge(src, dest, label=transition_alphabet)
+
+    # Generate a SVG file depicting the graph
+    A = to_agraph(G) 
+    A.layout('dot')                                                                 
+    A.draw(filename) 
+
 
 # Parse the MONA file for automata
 def parse_mona(mona_file):
@@ -65,17 +83,17 @@ def parse_mona(mona_file):
                 left_side, right_side = map(lambda x: x.strip(), line.split('->'))
                 destination_state = int(right_side.split()[1].strip())
                 source_side, transition_alphabet = map(lambda x: x.strip(), left_side.split(':'))
-                source_state = source_side.split()[1].strip()
+                source_state = int(source_side.split()[1].strip())
 
-                if source_state not in transition_dict:
-                    transition_dict[source_state] = [(transition_alphabet, destination_state)]
+                if (source_state, destination_state) not in transition_dict:
+                    transition_dict[(source_state, destination_state)] = [transition_alphabet]
                 else:
-                    transition_dict[source_state].append((transition_alphabet, destination_state))
+                    transition_dict[(source_state, destination_state)].append(transition_alphabet)
             else:
                 transition_mode = False
 
-
-
+    # Dump some information about the parsed MONA file
+    print("----------")
     print("Free Variables: ", free_variables)
     print("Initial State: ", initial_states)
     print("Accepting States: ", accepting_states)
@@ -84,12 +102,8 @@ def parse_mona(mona_file):
     print("Num States: ", num_states)
     print("Num BDD Nodes: ", num_bdd_nodes)
     print("----------")
-    print("")
-    print("Transition Dictionary")
-    print(transition_dict)
 
-
-
+    return transition_dict
 
 # Entry point
 if __name__ == '__main__':
@@ -99,6 +113,12 @@ if __name__ == '__main__':
         print(usage())
         exit(-1)
 
+    # Grab the input and output filenames
     mona_input = sys.argv[1]
     dfa_output = sys.argv[2]
-    parse_mona(mona_input)
+
+    # Parse the mona file
+    transition_dict = parse_mona(mona_input)
+
+    # Generate a graph SVG file to visualize the DFA
+    generate_graph(transition_dict, "DFA_figure.svg")
