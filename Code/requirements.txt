@@ -1,2 +1,6 @@
 networkx
 matplotlib
+graphviz
+libgraphviz-dev
+pkg-config
+pygraphviz
