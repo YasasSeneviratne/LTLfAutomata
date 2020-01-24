@@ -1,5 +1,6 @@
 '''
 The purpose of this module is to plot the DFA parsed from the MONA file
+and generate an output SVG file.
 '''
 
 import networkx as nx
