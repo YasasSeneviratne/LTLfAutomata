@@ -8,13 +8,10 @@
 
 from utils.ANML import Anml
 
-def make_homogeneous(mona_data):
+def make_homogeneous(mona_data, filename):
 
-    # Create a thing
+    # Create an Automata network
     anml = Anml.Anml()
-    stes = []
-
-    num_states = 0
 
     # Grab details about the DFA
     states = mona_data['states']
@@ -28,11 +25,13 @@ def make_homogeneous(mona_data):
     for state in states:
         anml_states[state] = []
     
+    # Keep track of all of the incoming character classes for each destination state
     character_class_lookup = {}
 
     # Add all of the states
     for (src, dest), symbols in mona_data['transition_dict'].items():
 
+        # Generate a new character class string
         character_class = '['
         for symbol in symbols:
             character_class += r"\x%02X" % symbol
@@ -83,4 +82,4 @@ def make_homogeneous(mona_data):
                 anml.AddAnmlEdge(ste_src, ste_dest, 0)
     
     # Pop out the ANML!
-    anml.ExportAnml("homogeneous_automata.anml")
+    anml.ExportAnml(filename)
