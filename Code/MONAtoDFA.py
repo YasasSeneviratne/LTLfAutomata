@@ -36,8 +36,8 @@ if __name__ == '__main__':
         exit(-1)
 
     # Grab the input and output filenames
-    mona_input = sys.argv[1]
-    dfa_output = sys.argv[2]
+    mona_input = sys.argv[1] # This is the output from the MONA program
+    homogeneous_output = sys.argv[2] # This is the homogeneous output
 
     # Parse the mona file
     mona_data = Mona.parse_mona(mona_input)
@@ -46,4 +46,4 @@ if __name__ == '__main__':
     PlotDFA.generate_graph(mona_data['transition_dict'], "DFA_figure.svg")
 
     # Translate non-homogeneous automata into homogeneous automata
-    AutomataTools.make_homogeneous(mona_data)
+    AutomataTools.make_homogeneous(mona_data, homogeneous_output)
