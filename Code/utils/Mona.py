@@ -1,19 +1,35 @@
 '''
 The purpose of this module is to parse MONA file contents
+and translate from signal bit vectors into discrete symbols
 '''
 
 import re
 
 # Parse the MONA file for automata
 # Symbol sets the transition to symbols instead of bit vectors
-def parse_mona(mona_file, symbol=True):
+def parse_mona(mona_file, translate_table='signal_to_symbol_translation.txt'):
+    
+    # Read the entire MONA File
     mona_content = None
     try:
         with open(mona_file, 'r') as f:
             mona_content = f.readlines()
 
+    # Catch read exception
     except Exception as e:
-        print("Cannot open mona file %s".format(mona_file))
+        print("Cannot open mona file {}".format(mona_file))
+        print("\tException: ", e)
+        exit(-1)
+    
+    # Open the translate table file to write signal: symbol pairs
+    if translate_table:
+        try:
+            translate_table_file = open(translate_table, 'w')
+            translate_table_file.write("MONA Signals\t:\tEquivalent Symbol\n")
+        except Exception as e:
+            print("Cannot write to translate table file {}".format(translate_table))
+            print("\Exception: ", e)
+            exit(-1)
 
     transitions_mode = False
     transition_dict = {}
@@ -39,7 +55,6 @@ def parse_mona(mona_file, symbol=True):
             if "Don't-care states" in line:
                 dont_care_states = line.split(':')[1].strip().split()
 
-
             if 'Automaton has' in line:
                 num_states, num_bdd_nodes = re.findall(r'[0-9]+', line)
                 num_states = int(num_states)
@@ -54,20 +69,25 @@ def parse_mona(mona_file, symbol=True):
             if '->' in line:
                 left_side, right_side = map(lambda x: x.strip(), line.split('->'))
                 destination_state = right_side.split()[1].strip()
-                source_side, transition_alphabet = map(lambda x: x.strip(), left_side.split(':'))
+                source_side, transition_signal = map(lambda x: x.strip(), left_side.split(':'))
                 source_state = source_side.split()[1].strip()
 
-                if symbol:
-                    transition_alphabet = alphabet(transition_alphabet)
+                # Translate bit pattern to unique symbol
+                transition_alphabet = alphabet(transition_signal)
 
+                # If we're writing a translation table, write to file
+                if translate_table:
+                    translate_table_file.write("{}:{}\n".format(transition_signal, transition_alphabet))
 
+                # Keep track of transition alphabets from source to destination states
                 if (source_state, destination_state) not in transition_dict:
                     transition_dict[(source_state, destination_state)] = transition_alphabet
                 else:
                     transition_dict[(source_state, destination_state)].extend(transition_alphabet)
             else:
-                transition_mode = False
+                transitions_mode = False
 
+    # Collect all the states
     states = set()
     for state in initial_states:
         states.add(state)
@@ -97,6 +117,10 @@ def parse_mona(mona_file, symbol=True):
     # Print the parsed data for debugging
     for k, v in mona_data.items():
         print('\t' + str(k) + ": " + str(v))
+
+    # Close the translation table
+    if translate_table:
+        translate_table_file.close()
 
     return mona_data
 
