@@ -43,7 +43,7 @@ if __name__ == '__main__':
     mona_data = Mona.parse_mona(mona_input)
 
     # Generate a graph SVG file to visualize the DFA
-    PlotDFA.generate_graph(mona_data['transition_dict'], "DFA_figure.svg")
+    PlotDFA.generate_graph(mona_data['transition_dict'], mona_data['initial_states'], mona_data['accepting_states'], "DFA_figure.svg")
 
     # Translate non-homogeneous automata into homogeneous automata
     AutomataTools.make_homogeneous(mona_data, homogeneous_output)
