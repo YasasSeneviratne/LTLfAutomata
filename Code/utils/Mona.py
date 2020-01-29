@@ -20,17 +20,8 @@ def parse_mona(mona_file, translate_table='signal_to_symbol_translation.txt'):
         print("Cannot open mona file {}".format(mona_file))
         print("\tException: ", e)
         exit(-1)
-    
-    # Open the translate table file to write signal: symbol pairs
-    if translate_table:
-        try:
-            translate_table_file = open(translate_table, 'w')
-            translate_table_file.write("MONA Signals\t:\tEquivalent Symbol\n")
-        except Exception as e:
-            print("Cannot write to translate table file {}".format(translate_table))
-            print("\Exception: ", e)
-            exit(-1)
 
+    translation_list = []
     transitions_mode = False
     transition_dict = {}
 
@@ -77,7 +68,8 @@ def parse_mona(mona_file, translate_table='signal_to_symbol_translation.txt'):
 
                 # If we're writing a translation table, write to file
                 if translate_table:
-                    translate_table_file.write("{}:{}\n".format(transition_signal, transition_alphabet))
+                    if (transition_signal, transition_alphabet) not in translation_list:
+                        translation_list.append((transition_signal, transition_alphabet))
 
                 # Keep track of transition alphabets from source to destination states
                 if (source_state, destination_state) not in transition_dict:
@@ -118,8 +110,21 @@ def parse_mona(mona_file, translate_table='signal_to_symbol_translation.txt'):
     for k, v in mona_data.items():
         print('\t' + str(k) + ": " + str(v))
 
-    # Close the translation table
+    # Populate the translation table
     if translate_table:
+
+        try:
+            translate_table_file = open(translate_table, 'w')
+            translate_table_file.write("MONA Signals\t:\tEquivalent Symbols\n")
+            translate_table_file.write("------------------------------------------\n")
+
+            for (transition_signal, transition_alphabet) in translation_list:
+                translate_table_file.write("{}\t\t:\t{}\n".format(transition_signal, transition_alphabet))
+
+        except Exception as e:
+            print("Cannot write to translate table file {}".format(translate_table))
+            print("Exception: ", e)
+
         translate_table_file.close()
 
     return mona_data
