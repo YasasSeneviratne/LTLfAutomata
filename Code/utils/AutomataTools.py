@@ -60,7 +60,7 @@ def make_homogeneous(mona_data, filename):
                 report_code = 1
             else:
                 accepting = False
-                report_code = 0
+                report_code = None
 
             anmlId = '{}-{}'.format(dest, character_class)
 
