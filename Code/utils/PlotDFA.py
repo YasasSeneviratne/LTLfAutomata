@@ -8,7 +8,7 @@ from networkx.drawing.nx_agraph import to_agraph
 
 
 # Generate a graph from the transitions
-def generate_graph(transitions, initial_states, accepting_states, filename):
+def generate_graph(transitions, initial_states, accepting_states, filename, verbose=False):
 
     G = nx.MultiDiGraph()
 
@@ -21,7 +21,7 @@ def generate_graph(transitions, initial_states, accepting_states, filename):
                 G.add_node(src, color='green')
             else:     
                 G.add_node(src)
-                
+
         if not G.has_node(dest):
 
             # Make accepting states red
@@ -32,6 +32,10 @@ def generate_graph(transitions, initial_states, accepting_states, filename):
         G.add_edge(src, dest, label=transition_alphabet)
 
     # Generate a SVG file depicting the graph
-    A = to_agraph(G) 
-    A.layout('dot')                                                                 
+    A = to_agraph(G)
+    A.layout('dot')
+
+    if verbose:
+        print("Writing out MONA-generated automaton to file: {}".format(filename))
+
     A.draw(filename)

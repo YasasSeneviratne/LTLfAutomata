@@ -7,7 +7,7 @@ import re
 
 # Parse the MONA file for automata
 # Symbol sets the transition to symbols instead of bit vectors
-def parse_mona(mona_file, translate_table='signal_to_symbol_translation.txt'):
+def parse_mona(mona_file, translate_table='signal_to_symbol_translation.txt', verbose=False):
     
     # Read the entire MONA File
     mona_content = None
@@ -107,8 +107,10 @@ def parse_mona(mona_file, translate_table='signal_to_symbol_translation.txt'):
             }
     
     # Print the parsed data for debugging
-    for k, v in mona_data.items():
-        print('\t' + str(k) + ": " + str(v))
+    if verbose:
+        print("Parsed MONA DFA Information")
+        for k, v in mona_data.items():
+            print('\t' + str(k) + ": " + str(v))
 
     # Populate the translation table
     if translate_table:

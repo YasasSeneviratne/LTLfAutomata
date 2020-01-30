@@ -30,6 +30,8 @@ def usage():
 # Entry point
 if __name__ == '__main__':
 
+    verbose = True
+
     # Check the correct number of command line arguments
     if len(sys.argv) != 3:
         print(usage())
@@ -40,10 +42,10 @@ if __name__ == '__main__':
     homogeneous_output = sys.argv[2] # This is the homogeneous output
 
     # Parse the mona file
-    mona_data = Mona.parse_mona(mona_input)
+    mona_data = Mona.parse_mona(mona_input, verbose=verbose)
 
     # Generate a graph SVG file to visualize the DFA
-    PlotDFA.generate_graph(mona_data['transition_dict'], mona_data['initial_states'], mona_data['accepting_states'], "DFA_figure.svg")
+    PlotDFA.generate_graph(mona_data['transition_dict'], mona_data['initial_states'], mona_data['accepting_states'], "DFA_figure.svg", verbose=verbose)
 
     # Translate non-homogeneous automata into homogeneous automata
     AutomataTools.make_homogeneous(mona_data, homogeneous_output)
