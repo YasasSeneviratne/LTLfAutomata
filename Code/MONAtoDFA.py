@@ -24,16 +24,20 @@ from utils import AutomataTools
 # Get the usage string
 def usage():
     usage = "----------------- Usage ----------------\n"
-    usage += "./MONAtoDFA.py <MONA input file> <DFA output file>"
+    usage += "./MONAtoDFA.py <MONA input file> <DFA output file> [--reverse]"
     return usage
 
 # Entry point
 if __name__ == '__main__':
 
     verbose = True
-
+    
     # Check the correct number of command line arguments
-    if len(sys.argv) != 3:
+    if len(sys.argv) == 3:
+        reverse = False
+    elif len(sys.argv) == 4 and sys.argv[3] == "--reverse":
+        reverse = True
+    else:
         print(usage())
         exit(-1)
 
@@ -42,7 +46,7 @@ if __name__ == '__main__':
     homogeneous_output = sys.argv[2] # This is the homogeneous output
 
     # Parse the mona file
-    mona_data = Mona.parse_mona(mona_input, verbose=verbose)
+    mona_data = Mona.parse_mona(mona_input, reverse=reverse, verbose=verbose)
 
     # Generate a graph SVG file to visualize the DFA
     PlotDFA.generate_graph(mona_data['transition_dict'], mona_data['initial_states'], mona_data['accepting_states'], "DFA_figure.svg", verbose=verbose)

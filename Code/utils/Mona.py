@@ -7,7 +7,7 @@ import re
 
 # Parse the MONA file for automata
 # Symbol sets the transition to symbols instead of bit vectors
-def parse_mona(mona_file, translate_table='signal_to_symbol_translation.txt', verbose=False):
+def parse_mona(mona_file, translate_table='signal_to_symbol_translation.txt', reverse=False, verbose=False):
     
     # Read the entire MONA File
     mona_content = None
@@ -63,6 +63,10 @@ def parse_mona(mona_file, translate_table='signal_to_symbol_translation.txt', ve
                 source_side, transition_signal = map(lambda x: x.strip(), left_side.split(':'))
                 source_state = source_side.split()[1].strip()
 
+                # If we're reversing the automaton, swap source and destination states
+                if reverse:
+                    source_state, destination_state = destination_state, source_state
+                
                 # Translate bit pattern to unique symbol
                 transition_alphabet = alphabet(transition_signal)
 
@@ -79,6 +83,17 @@ def parse_mona(mona_file, translate_table='signal_to_symbol_translation.txt', ve
             else:
                 transitions_mode = False
 
+    # If we're reversing the automaton, swap initial and accepting states
+    if reverse:
+        initial_states, accepting_states = accepting_states, initial_states
+        
+        # Previous non-accepting states have become accepting, so remove those
+        accepting_set = set(accepting_states)
+        rejecting_states = list(set(rejecting_states) - accepting_set)
+
+        # Also add initial states, which used to be accepting, to don't-care set
+        dont_care_states = list((set(dont_care_states) - accepting_set) | set(initial_states))
+        
     # Collect all the states
     states = set()
     for state in initial_states:
@@ -89,7 +104,7 @@ def parse_mona(mona_file, translate_table='signal_to_symbol_translation.txt', ve
         states.add(state)
     for state in dont_care_states:
         states.add(state)
-    
+
     states = list(states)
 
     assert (len(states) == num_states), "We're missing states!"
