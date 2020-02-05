@@ -1,0 +1,2 @@
+This directory contains scripts calling APSim for FlexAmata and FPGA integration
+To use these scripts, you must install APSim and put it on your PYTHON_PATH
