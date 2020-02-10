@@ -1,14 +1,4 @@
-A B : old1 old2 old0 old3 : new1
-0 0 : X 1 X X : 1
-0 0 : X 0 X X : 0
-0 1 : X X 1 X : 1
-0 1 : X X 0 X : 0
-1 0 : X X X 1 : 1
-1 0 : X X X 0 : 0
-1 1 : X X 1 X : 1
-1 1 : X X 0 X : 0
-
-A B : old1 old2 old0 old3 : new2
+A B : old2 old1 old3 old0 : new2
 0 0 : X X 1 X : 1
 0 0 : X X 0 X : 0
 0 1 : X X 1 X : 1
@@ -18,7 +8,7 @@ A B : old1 old2 old0 old3 : new2
 1 1 : X X 1 X : 1
 1 1 : X X 0 X : 0
 
-A B : old1 old2 old0 old3 : new0
+A B : old2 old1 old3 old0 : new1
 0 0 : X 1 X X : 1
 0 0 : X 0 X X : 0
 0 1 : X X 1 X : 1
@@ -28,9 +18,23 @@ A B : old1 old2 old0 old3 : new0
 1 1 : X X 1 X : 1
 1 1 : X X 0 X : 0
 
-A B : old1 old2 old0 old3 : new3
+A B : old2 old1 old3 old0 : new3
 0 0 : X X X 1 : 1
 0 0 : X X X 0 : 0
+0 1 : X X 1 X : 1
+0 1 : X X 0 X : 0
+1 0 : X X X 1 : 1
+1 0 : X X X 0 : 0
+1 1 : X X 1 X : 1
+1 1 : X X 0 X : 0
+
+new2 new1 new3 new0 : report
+X X 1 X : 1
+X X 0 X : 0
+
+A B : old2 old1 old3 old0 : new0
+0 0 : X 1 X X : 1
+0 0 : X 0 X X : 0
 0 1 : X X 1 X : 1
 0 1 : X X 0 X : 0
 1 0 : X X X 1 : 1
