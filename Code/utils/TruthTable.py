@@ -32,8 +32,21 @@ def from_dfa(mona_data):
             for i in range(bit_length):
                 # State bits start counting from the end
                 reverse_index = -(i + 1)
-                row = (list(binary_label), list(binary_source), binary_dest[reverse_index])
+                row = (binary_label, binary_source, binary_dest[reverse_index])
                 tables['new%d' % i].append(row)
+
+    # Additional truth table for the report bit
+    report_table = [(None, state_names, 'report')]
+
+    for state in mona_data['accepting_states']:
+        binary_state = list(format(int(state), state_format_string))
+        report_table.append((None, binary_state, '1'))
+
+    for state in mona_data['rejecting_states'] | mona_data['dont_care_states']:
+        binary_state = list(format(int(state), state_format_string))
+        report_table.append((None, binary_state, '0'))
+
+    tables['report'] = report_table
 
     return tables
 
@@ -90,16 +103,28 @@ def from_nfa(mona_data):
             
         tables[dest] = table
 
+    new_state_names = ['new' + s for s in mona_data['states']]
+    report_table = [(None, new_state_names, 'report')]
+    report_row = ['X'] * bit_length
+
+    for state in mona_data['accepting_states']:
+        state_index = int(state)
+        report_row[source_index] = '1'
+        report_table.append((None, report_row.copy(), '1'))
+        report_row[source_index] = '0'
+
+    report_table.append((None, report_row.copy(), '0'))
+    tables['report'] = report_table
+
     return tables
 
 def save_to_file(truth_tables, filename):
     try:
         with open(filename, 'w') as file:
             for truth_table in truth_tables.values():
-                for (inputs, old_state_bits, new_state_bit) in truth_table:
-                    file.write(' '.join(inputs) + ' : ' +
-                               ' '.join(old_state_bits) + ' : ' +
-                               new_state_bit + '\n')
+                for (inputs, state_bits, output) in truth_table:
+                    row = ' '.join(inputs) + ' : ' if inputs else ''
+                    file.write(row + ' '.join(state_bits) + ' : ' + output + '\n')
 
                 file.write('\n')
     except IOError as e:
