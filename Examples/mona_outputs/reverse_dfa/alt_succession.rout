@@ -1,0 +1,9 @@
+MONA v1.4-17 for WS1S/WS2S
+Copyright (C) 1997-2013 Aarhus University
+
+PARSING
+Error in file 'rfol/alt_succession.rfol' line 4 column 12
+  var2 B, A, B;
+             ^
+'B' already declared
+Execution aborted
