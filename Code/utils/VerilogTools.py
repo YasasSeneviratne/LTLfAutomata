@@ -4,17 +4,7 @@
 '''
 
 from enum import Enum
-
-# def transform_bdd(bdd_data):
-#     """
-#     This function transforms bdds into space-separated list of variables
-#     for a truth-table representation
-#     """
-
-#     # This needs to be implemented
-#     truth_table_data = bdd_data
-
-#     return truth_table_data
+import copy
 
 
 def read_truth_table_file(truth_table_file):
@@ -33,6 +23,11 @@ def read_truth_table_file(truth_table_file):
 
 
 class TruthTableType(Enum):
+    """
+    For now we support two different types of truth tables
+    reporting: this combinational truth table sets the reporting bit/bits
+    transition: this sequential truth table transitions between states, symbolically
+    """
     REPORTING = 1
     TRANSITION = 2
 
@@ -179,7 +174,7 @@ def build_primitive_truthtable(truth_table_file, output_verilog_file):
 
     for truth_table in truth_tables:
         print(truth_table)
-
+    
     verilog_code = ""
 
     for truth_table in truth_tables:
@@ -194,6 +189,9 @@ def build_primitive_truthtable(truth_table_file, output_verilog_file):
         #Add a newline between tables
         verilog_code += "\n"
 
+    # Write out the module definition
+    verilog_code += make_module(truth_tables)
+
     try:
         with open(output_verilog_file, 'w') as f:
             f.write(verilog_code)
@@ -206,35 +204,44 @@ def build_primitive_truthtable(truth_table_file, output_verilog_file):
 
 def make_combinationatorial_udp(truth_table):
     """
-    This function generates a TruthTable Verilog user-defined primitive
-    This is only used for the reporting truthtable, which is combinatorial
+    This function generates a TruthTable Verilog module
+    This is only used for the reporting truthtable, which is combinational
     """
 
-    output = truth_table.header['output']
+    output_name = truth_table.header['output']
     inputs = truth_table.header['inputs']
     transitions = truth_table.transitions
 
-    verilog_code = "primitive {}TruthTable ({},{});\n".format(output, output, ','.join(inputs))
-    verilog_code += "\toutput {};\n".format(output)
-    verilog_code += "\tinput {};\n".format(','.join(inputs))
-    verilog_code += "\ttable\n"
-    verilog_code += "\t\t// {} : {}\n".format(' '.join(inputs), output)
+    verilog_code = "module {}TruthTable \n".format(output_name)
+    verilog_code += "(\n"
+    verilog_code += "\toutput reg {},\n".format(output_name)
+    verilog_code += "\tinput wire {}\n".format(','.join(inputs))
+    verilog_code += ");\n"
+    verilog_code += "\n"
+    verilog_code += "\talways @*\n"
+    verilog_code += "\tcase ({" + "{}".format(','.join(inputs)) + "})\n"
+    verilog_code += "\t\t// {} : {}\n".format(' '.join(inputs), output_name)
 
     for transition in transitions:
         inputs = transition['inputs']
         output = transition['output']
-        verilog_code += "\t\t{} : {};\n".format(' '.join(inputs), output)
+
+        verilog_code += "\t\t{}'b{} : {} = 1'b{};\n".format(
+            len(inputs),
+            ''.join(inputs),
+            output_name,
+            output
+        )
+
+    # For now, let's default to an output of 0; this might need to be changed
+    verilog_code += "\t\tdefault : {} = 1'b0;\n".format(output_name)
+        
     verilog_code += '\n'
-    verilog_code += "\tendtable\n"
-    verilog_code += "endprimitive\n"
+    verilog_code += "\tendcase\n"
+    verilog_code += "endmodule\n"
     verilog_code += '\n'
 
     return verilog_code
-
-def transform_old_to_new(old_signal):
-    """
-    This helper function simply replaces 'old' in a signal name with 'new'
-    """
 
 
 def make_sequential_udp(truth_table):
@@ -243,27 +250,27 @@ def make_sequential_udp(truth_table):
     This is used for state transition logic, which is sequential
     """
 
-    inputs = truth_table.header['inputs']
-    previous_states = truth_table.header['previous_state']
-    next_state = truth_table.header['next_state']
+    inputs = copy.copy(truth_table.header['inputs'])
+    previous_states = copy.copy(truth_table.header['previous_state'])
+    next_state_name = copy.copy(truth_table.header['next_state'])
 
     # This is a little tricky
     # If we have more than one bit in the previous_state
     # We need to take all other bits and consider those inputs
     # from other truth tables
-    assert 'new' in next_state, 'Next State not properly named: {}'.format(next_state)
+    assert 'new' in next_state_name, 'Next State not properly named: {}'.format(next_state_name)
 
     # This is one of the previous state signals
-    previous_state = next_state.replace('new', 'old')
+    previous_state_name = next_state_name.replace('new', 'old')
 
     # Make sure that the naming convention is followed
-    assert previous_state in previous_states, 'State names are not properly named: {}'.format(previous_state)
+    assert previous_state_name in previous_states, 'State names are not properly named: {}'.format(previous_state)
     
     # We'll use the index of the previous state and remove it below
-    previous_state_index = previous_states.index(previous_state)
+    previous_state_index = previous_states.index(previous_state_name)
 
     # Now remove our one previous state signal from the remaining
-    previous_states.remove(previous_state)
+    previous_states.remove(previous_state_name)
 
     # Replace all the other signals with 'new'; they'll be inputs from other TTs
     input_state_bits = []
@@ -276,17 +283,17 @@ def make_sequential_udp(truth_table):
 
     transitions = truth_table.transitions
 
-    verilog_code = "primitive {}TruthTable ({}, {}, clk, rst);\n".format(next_state, next_state, ','.join(inputs))
-    verilog_code += "\tinput clk, rst, {};\n".format(','.join(inputs))
-    verilog_code += "\toutput {};\n".format(next_state)
-    verilog_code += "\treg {};\n".format(next_state)
+    verilog_code = "module {}TruthTable (\n".format(next_state_name)
+    verilog_code += "\toutput reg {},\n".format(next_state_name)
+    verilog_code += "\tinput wire clk, rst, {}\n".format(','.join(inputs))
+    verilog_code += ");\n"
+    verilog_code += "\treg {};\n".format(previous_state_name)
     verilog_code += "\tinitial\n"
-    verilog_code += "\t{} = 1'b1;\n\n".format(next_state)
-    verilog_code += "\ttable\n"
-    verilog_code += "\t\t// {} clk rst : {} : {}\n".format(' '.join(inputs), previous_state, next_state)
-
-    # This first transition line is for the reset
-    verilog_code += "\t\t {} ? 1: ? : 0;\n".format(' '.join(['?' for x in inputs]))
+    verilog_code += "\t{} = 1'b0;\n".format(previous_state_name)
+    verilog_code += "\n"
+    verilog_code += "\talways @(posedge clk)\n"
+    verilog_code += "\tcase ({" + "{}".format(', '.join(inputs)) + "})\n"
+    verilog_code += "\t\t// {} {} : {}\n".format(' '.join(inputs), previous_state_name, next_state_name)
 
     for transition in transitions:
         inputs = transition['inputs']
@@ -294,30 +301,99 @@ def make_sequential_udp(truth_table):
         next_state = transition['next_state']
 
         for i,state in enumerate(previous_states):
-            if i != previous_state_index:
-                inputs.append(state)
-            else:
+            
+            inputs.append(state)
+
+            if i == previous_state_index:
                 previous_state = state
 
-        verilog_code += "\t\t{} R 0: {} : {};\n".format(' '.join(inputs), previous_state, next_state)
+        verilog_code += "\t\t{}'b{} : {} = 1'b{};\n".format(
+            len(inputs),
+            ''.join(inputs),
+            next_state_name,
+            next_state
+        )
 
-    verilog_code += "\tendtable\n"
-    verilog_code += "endprimitive\n\n"
+    verilog_code += "\tendcase\n"
+    verilog_code += "\n"
+    verilog_code += "\talways @(posedge clk, posedge rst)\n"
+    verilog_code += "\tbegin\n"
+    verilog_code += "\t\tif(rst == 1'b1)\n"
+    verilog_code += "\t\t\t{} = 1'b0;\n".format(previous_state_name)
+    verilog_code += "\t\telse\n"
+    verilog_code += "\t\t\t{} = {};\n".format(previous_state_name, next_state_name)
+    verilog_code += "\tend\n"
+    verilog_code += "endmodule\n\n"
     verilog_code += '\n'
 
     return verilog_code
 
 
-def make_module():
+def make_module(truth_tables):
     """
     This function generates the module interface for the symbolic
     finite state automaton.
     """
 
-    verilog_code = "module TransitionTable(q, clk, reset"
-    verilog_code += "input clk, reset, "
-    verilog_code += "output report;\n"
+    inputs = set()
+    outputs = set()
+    for truth_table in truth_tables:
+        if truth_table.type == TruthTableType.TRANSITION:
+            for input in truth_table.header['inputs']:
+                inputs.add(input)
+            outputs.add(truth_table.header['next_state'])
 
+    verilog_code = "module TransitionTable({}, clk, rst, report);\n".format(', '.join(inputs))
+    verilog_code += "\n"
+    verilog_code += "\tinput {}, clk, rst;\n".format(', '.join(inputs))
+    verilog_code += "\toutput wire report;\n"
+    verilog_code += "\twire {};\n".format(', '.join(outputs))
+    verilog_code += "\n"
+
+    # Instantiate all truth tables here
+    verilog_code += "\t// Instantiate truth tables\n"
+
+    for truth_table in truth_tables:
+
+        if truth_table.type == TruthTableType.REPORTING:
+            output = truth_table.header['output']
+            inputs = truth_table.header['inputs']
+            previous_states = []
+
+        elif truth_table.type == TruthTableType.TRANSITION:
+            output = truth_table.header['next_state']
+            inputs = truth_table.header['inputs']
+
+            # Get the names of input state signals from other modules
+            previous_states = [x.replace('old', 'new') for x in truth_table.header['previous_state']]
+            if output in previous_states:
+                previous_states.remove(output)
+
+        else:
+            raise Exception("Unsupported Truth Table Type!")
+
+        verilog_code += "\t{}TruthTable {}tt(\n".format(output, output)
+        verilog_code += "\t\t.{}({}),\n".format(output, output)
+
+        for input in inputs[:-1]:
+            verilog_code += "\t\t.{}({}),\n".format(input, input)
+        
+        # If we don't have any external previous states, we're done
+        if(len(previous_states) == 0):
+            verilog_code += "\t\t.{}({})\n".format(inputs[-1], inputs[-1])
+        else:
+            verilog_code += "\t\t.{}({}),\n".format(inputs[-1], inputs[-1])
+
+        for previous_state in previous_states:
+            verilog_code += "\t\t.{}({}),\n".format(previous_state, previous_state)
+
+        if truth_table.type == TruthTableType.TRANSITION:
+            verilog_code += "\t\t.clk(clk),\n"
+            verilog_code += "\t\t.rst(rst)\n"
+
+        verilog_code += "\t);\n"
+        verilog_code += "\n"
+        
 
     verilog_code += "endmodule\n"
 
