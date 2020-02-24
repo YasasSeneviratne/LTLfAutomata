@@ -1,0 +1,48 @@
+MONA v1.4-17 for WS1S/WS2S
+Copyright (C) 1997-2013 Aarhus University
+
+PARSING
+Time: 00:00:00.00
+
+CODE GENERATION
+DAG hits: 111, nodes: 34
+Time: 00:00:00.00
+
+REDUCTION
+Projections removed: 0 (of 4)
+Products removed: 4 (of 16)
+Other nodes removed: 0 (of 12)
+DAG nodes after reduction: 28
+Time: 00:00:00.00
+
+AUTOMATON CONSTRUCTION
+                                                                            3% completed (1 automata in memory, 0MB memory used)                                                                            7% completed (2 automata in memory, 0MB memory used)                                                                            10% completed (3 automata in memory, 0MB memory used)                                                                            14% completed (3 automata in memory, 0MB memory used)                                                                            17% completed (3 automata in memory, 0MB memory used)                                                                            21% completed (4 automata in memory, 0MB memory used)                                                                            25% completed (4 automata in memory, 0MB memory used)                                                                            28% completed (4 automata in memory, 0MB memory used)                                                                            32% completed (5 automata in memory, 0MB memory used)                                                                            35% completed (5 automata in memory, 0MB memory used)                                                                            39% completed (4 automata in memory, 0MB memory used)                                                                            42% completed (4 automata in memory, 0MB memory used)                                                                            46% completed (4 automata in memory, 0MB memory used)                                                                            50% completed (4 automata in memory, 0MB memory used)                                                                            53% completed (4 automata in memory, 0MB memory used)                                                                            57% completed (4 automata in memory, 0MB memory used)                                                                            60% completed (4 automata in memory, 0MB memory used)                                                                            64% completed (3 automata in memory, 0MB memory used)                                                                            67% completed (2 automata in memory, 0MB memory used)                                                                            71% completed (2 automata in memory, 0MB memory used)                                                                            75% completed (2 automata in memory, 0MB memory used)                                                                            78% completed (3 automata in memory, 0MB memory used)                                                                            82% completed (2 automata in memory, 0MB memory used)                                                                            85% completed (3 automata in memory, 0MB memory used)                                                                            89% completed (2 automata in memory, 0MB memory used)                                                                            92% completed (2 automata in memory, 0MB memory used)                                                                            96% completed (1 automata in memory, 0MB memory used)                                                                            100% completed                                                                         
+Time: 00:00:00.00
+
+DFA for formula with free variables: A 
+Initial state: 0
+Accepting states: 3 
+Rejecting states: 2 
+Don't-care states: 0 1 
+
+Automaton has 4 states and 4 BDD-nodes
+Transitions:
+State 0: X -> state 1
+State 1: 0 -> state 2
+State 1: 1 -> state 3
+State 2: 0 -> state 2
+State 2: 1 -> state 3
+State 3: X -> state 3
+
+ANALYSIS
+A counter-example of least length (1) is:
+A               X 0
+
+A = {}
+
+A satisfying example of least length (1) is:
+A               X 1
+
+A = {0}
+
+Total time: 00:00:00.00

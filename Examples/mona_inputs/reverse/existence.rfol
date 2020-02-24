@@ -1,0 +1,5 @@
+#F a
+# past #(F a)
+m2l-str;
+var2 A;
+(ex1 x1: (x1 <= max $ & 0 <= x1 & ((x1 in A))));
