@@ -1,0 +1,30 @@
+<anml version="1.0"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<automata-network id="an1">
+		<state-transition-element id="1-0" symbol-set="[\x00\x01]" start="all-input">
+			<report-on-match reportcode="1"/>
+			<activate-on-match element="1-0"/>
+			<activate-on-match element="2-1"/>
+		</state-transition-element>
+		<state-transition-element id="2-1" symbol-set="[\x02\x03]" start="all-input">
+			<activate-on-match element="3-2"/>
+			<activate-on-match element="1-3"/>
+			<activate-on-match element="2-4"/>
+		</state-transition-element>
+		<state-transition-element id="3-2" symbol-set="[\x00\x02]" >
+			<activate-on-match element="3-5"/>
+		</state-transition-element>
+		<state-transition-element id="1-3" symbol-set="[\x01]" >
+			<report-on-match reportcode="1"/>
+			<activate-on-match element="1-0"/>
+			<activate-on-match element="2-1"/>
+		</state-transition-element>
+		<state-transition-element id="2-4" symbol-set="[\x03]" >
+			<activate-on-match element="3-2"/>
+			<activate-on-match element="1-3"/>
+			<activate-on-match element="2-4"/>
+		</state-transition-element>
+		<state-transition-element id="3-5" symbol-set="[\x00\x01\x02\x03]" >
+			<activate-on-match element="3-5"/>
+		</state-transition-element>
+	</automata-network>
+</anml>
