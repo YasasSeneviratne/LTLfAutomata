@@ -9,25 +9,26 @@ from multiprocessing.dummy import Pool as ThreadPool
 import glob
 
 out_dir_prefix = './'
-dbw = 4
+dbw = None
 
 # Get the usage string
 def usage():
     usage = "----------------- Usage ----------------\n"
-    usage += "./APSim.py <input ANML directory> <output HDL directory>"
+    usage += "./APSim.py <automata symbol bit width> <input ANML directory> <output HDL directory>"
     return usage
 
 
 if __name__ == '__main__':
     
     # Check the correct number of command line arguments
-    if len(sys.argv) != 3:
+    if len(sys.argv) != 4:
         print(usage())
         exit(-1)
     
     # ANML directory
-    input_anml_directory = sys.argv[1]
-    output_hdl_directory = sys.argv[2]
+    dbw = int(sys.argv[1])
+    input_anml_directory = sys.argv[2]
+    output_hdl_directory = sys.argv[3]
 
     anml_input_files = glob.glob(input_anml_directory + '/*.anml')
 
