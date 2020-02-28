@@ -24,22 +24,22 @@ def generate_rule(rule_file, number_of_variables, output_file):
         with open(output_file, 'w') as out:
             line = file.readline()
 
-            while line and not line.startswith("var2"):
+            while line and not line.startswith("DFA for formula with free variables:"):
                 out.write(line)
                 line = file.readline()
 
-            old_vars = line.rstrip().replace(",", "").replace(";", "").split(" ")[1:]
+            old_vars = line.rstrip().split(": ")[1].split(" ")
             new_vars = ['I%d' % i for i in range(number_of_variables)]
             
             new_var_sample = random.sample(new_vars, len(old_vars))
 
-            var_dict = dict(zip(old_vars, new_var_sample))
+            out.write("DFA for formula with free variables: " + " ".join(new_var_sample) + "\n")
 
-            out.write("var2 " + ", ".join(new_var_sample) + ";\n")
-
-            formula = file.readline().rstrip()
-            pattern = re.compile("|".join(var_dict))
-            out.write(pattern.sub(lambda m: var_dict[m.group(0)], formula) + '\n')
+            line = file.readline()
+            
+            while line:
+                out.write(line)
+                line = file.readline()
 
 # Entry point
 if __name__ == '__main__':
@@ -58,5 +58,6 @@ if __name__ == '__main__':
     random.seed(random_seed)
     
     for i in range(number_of_rules):
+        print("Rule %d" % i)
         rule_file = rule_files[random.randrange(len(rule_files))]
-        generate_rule(rule_file, number_of_variables, output_directory + '/rule' + str(i) + '.fol')
+        generate_rule(rule_file, number_of_variables, output_directory + '/rule' + str(i) + '.out')
