@@ -5,6 +5,7 @@
 
 from enum import Enum
 import copy
+import sys
 
 
 def read_truth_table_file(truth_table_file):
@@ -285,7 +286,7 @@ def make_sequential_udp(truth_table):
 
     verilog_code = "module {}TruthTable (\n".format(next_state_name)
     verilog_code += "\toutput reg {},\n".format(next_state_name)
-    verilog_code += "\tinput wire clk, rst, {}\n".format(','.join(inputs))
+    verilog_code += "\tinput wire clk, run, rst, {}\n".format(','.join(inputs))
     verilog_code += ");\n"
     verilog_code += "\treg {};\n".format(previous_state_name)
     verilog_code += "\tinitial\n"
@@ -320,7 +321,7 @@ def make_sequential_udp(truth_table):
     verilog_code += "\tbegin\n"
     verilog_code += "\t\tif(rst == 1'b1)\n"
     verilog_code += "\t\t\t{} = 1'b0;\n".format(previous_state_name)
-    verilog_code += "\t\telse\n"
+    verilog_code += "\t\telse if (run == 1'b1)\n"
     verilog_code += "\t\t\t{} = {};\n".format(previous_state_name, next_state_name)
     verilog_code += "\tend\n"
     verilog_code += "endmodule\n\n"
@@ -336,18 +337,22 @@ def make_module(truth_tables):
     """
 
     inputs = set()
+    wires = set()
     outputs = set()
     for truth_table in truth_tables:
         if truth_table.type == TruthTableType.TRANSITION:
             for input in truth_table.header['inputs']:
                 inputs.add(input)
-            outputs.add(truth_table.header['next_state'])
+            wires.add(truth_table.header['next_state'])
+        
+        elif truth_table.type == TruthTableType.REPORTING:
+            outputs.add(truth_table.header['outputput'])
 
-    verilog_code = "module TransitionTable({}, clk, rst, report);\n".format(', '.join(inputs))
+    verilog_code = "module TransitionTable({}, clk, run, rst, report);\n".format(', '.join(inputs))
     verilog_code += "\n"
-    verilog_code += "\tinput {}, clk, rst;\n".format(', '.join(inputs))
-    verilog_code += "\toutput wire report;\n"
-    verilog_code += "\twire {};\n".format(', '.join(outputs))
+    verilog_code += "\tinput {}, clk, run, rst;\n".format(', '.join(inputs))
+    verilog_code += "\toutput wire {}};\n".format(', '.join(outputs))
+    verilog_code += "\twire {};\n".format(', '.join(wires))
     verilog_code += "\n"
 
     # Instantiate all truth tables here
@@ -389,6 +394,7 @@ def make_module(truth_tables):
 
         if truth_table.type == TruthTableType.TRANSITION:
             verilog_code += "\t\t.clk(clk),\n"
+            verilog_code += "\t\t.run(run),\n"
             verilog_code += "\t\t.rst(rst)\n"
 
         verilog_code += "\t);\n"
@@ -399,6 +405,23 @@ def make_module(truth_tables):
 
     return verilog_code
 
+# Get the usage string
+def usage():
+    usage = "----------------- Usage ----------------\n"
+    usage += "./VerilogTools.py <Truth Table Input> <Verilog Output>"
+    return usage
 
 if __name__ == '__main__':
-    build_primitive_truthtable('/home/tjt7a/src/LTLfAutomata/Examples/truth_tables/response.tt', 'output.v')
+
+    # Check the correct number of command line arguments
+    if len(sys.argv) == 3:
+        reverse = False
+    else:
+        print(usage())
+        exit(-1)
+
+    # Grab the input and output filenames
+    tt_input = sys.argv[1] # This is the truth table input
+    verilog_output = sys.argv[2] # This is the verilog output
+
+    build_primitive_truthtable(tt_input, verilog_output)
