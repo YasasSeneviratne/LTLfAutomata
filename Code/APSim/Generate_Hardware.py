@@ -4,6 +4,7 @@
     The purpose of this script is to convert an ANML file into a full hardware implementation
     for deployment on AWS with APSim.
     !! To use it, you must have APSim installed.
+    Install from here: https://github.com/tjt7a/APSim
 
 """
 

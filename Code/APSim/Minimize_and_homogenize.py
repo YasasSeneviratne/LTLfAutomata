@@ -2,6 +2,9 @@
 
 '''
     ! This script requires APSim to be installed !
+    Install my fork:
+    https://github.com/tjt7a/APSim
+
     The purpose of this script is to:
     1. load an ANML automata file
     2. draw its non-minimized version (_non_min.svg)
