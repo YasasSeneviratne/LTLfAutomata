@@ -25,6 +25,10 @@ def parse_mona(mona_file, translate_table='signal_to_symbol_translation.txt', re
     transitions_mode = False
     transition_dict = {}
 
+    # Automaton might have been generated with no don't-care states,
+    # so make sure that dont_care_states is declared even if that's the case
+    dont_care_states = []
+
     # Parse the file from top to bottom
     for line in mona_content:
 
