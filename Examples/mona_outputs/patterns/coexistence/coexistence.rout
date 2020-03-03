@@ -22,8 +22,7 @@ Time: 00:00:00.00
 DFA for formula with free variables: A B 
 Initial state: 0
 Accepting states: 2 5 
-Rejecting states: 3 4 
-Don't-care states: 0 1 
+Rejecting states: 0 1 3 4 
 
 Automaton has 6 states and 9 BDD-nodes
 Transitions:
