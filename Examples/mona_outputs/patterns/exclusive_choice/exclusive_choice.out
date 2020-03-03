@@ -21,26 +21,21 @@ Time: 00:00:00.00
 
 DFA for formula with free variables: A B 
 Initial state: 0
-Accepting states: 3 4 
-Rejecting states: 2 5 
-Don't-care states: 0 1 
+Accepting states: 2 3 
+Rejecting states: 0 1 4 
 
-Automaton has 6 states and 9 BDD-nodes
+Automaton has 5 states and 8 BDD-nodes
 Transitions:
 State 0: XX -> state 1
-State 1: 00 -> state 2
-State 1: 01 -> state 3
-State 1: 10 -> state 4
-State 1: 11 -> state 5
-State 2: 00 -> state 2
-State 2: 01 -> state 3
-State 2: 10 -> state 4
-State 2: 11 -> state 5
-State 3: 0X -> state 3
-State 3: 1X -> state 5
-State 4: X0 -> state 4
-State 4: X1 -> state 5
-State 5: XX -> state 5
+State 1: 00 -> state 1
+State 1: 01 -> state 2
+State 1: 10 -> state 3
+State 1: 11 -> state 4
+State 2: 0X -> state 2
+State 2: 1X -> state 4
+State 3: X0 -> state 3
+State 3: X1 -> state 4
+State 4: XX -> state 4
 
 ANALYSIS
 A counter-example of least length (1) is:
