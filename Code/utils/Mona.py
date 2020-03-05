@@ -7,7 +7,7 @@ import re
 
 # Parse the MONA file for automata
 # Symbol sets the transition to symbols instead of bit vectors
-def parse_mona(mona_file, translate_table='signal_to_symbol_translation.txt', reverse=False, verbose=False):
+def parse_mona(mona_file, translate_table='signal_to_symbol_translation.txt', reverse=False, remove_unreachable=True, verbose=False):
     
     # Read the entire MONA File
     mona_content = None
@@ -112,6 +112,10 @@ def parse_mona(mona_file, translate_table='signal_to_symbol_translation.txt', re
 
     # Removes superfluous state 0 added to the automaton by MONA
     remove_zero_state(mona_data)
+
+    # Remove unreachable states from the MONA-generated DFA
+    if remove_unreachable:
+        remove_unreachable_states(mona_data)
     
     # Reverse the automaton if reverse flag was set
     if reverse:
