@@ -48,8 +48,13 @@ if __name__ == '__main__':
     # Parse the mona file
     mona_data = Mona.parse_mona(mona_input, reverse=reverse, verbose=verbose)
 
-    # Generate a graph SVG file to visualize the DFA
-    PlotDFA.generate_graph(mona_data['transition_dict'], mona_data['initial_states'], mona_data['accepting_states'], "DFA_figure.svg", verbose=verbose)
+    # Generate a graph SVG file to visualize the DFA before removing unreachable states
+    PlotDFA.generate_graph(mona_data['transition_dict'], mona_data['initial_states'], mona_data['accepting_states'], "before_unreachable.svg", verbose=verbose)
+
+    Mona.remove_unreachable_states(mona_data)
+
+    # Generate a graph SVG file to visualize the DFA after removing unreachable states
+    PlotDFA.generate_graph(mona_data['transition_dict'], mona_data['initial_states'], mona_data['accepting_states'], "after_unreachable.svg", verbose=verbose)
 
     # Translate non-homogeneous automata into homogeneous automata
     AutomataTools.make_homogeneous(mona_data, homogeneous_output)
