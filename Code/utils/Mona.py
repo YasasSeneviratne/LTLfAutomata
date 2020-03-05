@@ -247,3 +247,54 @@ def remove_zero_state(mona_data):
     mona_data['dont_care_states'] = update_state_set(mona_data['dont_care_states'])
     mona_data['num_states'] -= 1
     mona_data['transition_dict'] = update_transition_dict(mona_data['transition_dict'])
+
+
+def remove_unreachable_states(mona_data):
+    """
+    The purpose of this function is to remove states that cannot reach an accepting/reporting states
+    As per MONA's convention, any such states would be rejecting states, and there should only be 
+    one of them in an automaton.
+    """
+
+    # Remove all cases in the transition dict where the state is either a source or a destination
+    def remove_state_from_transition_dict(transition_dict, state):
+        return {(source, dest): label
+            for (source, dest), label in transition_dict.items()
+                if source != state and dest != state}
+
+    states_to_remove = []
+
+    # As per convention, only rejecting states can be unreachable
+    for state in mona_data['rejecting_states']:
+
+        # Check if this state cannot reach an accepting/reporting state
+        # For now, we assume that only states that are not reporting and have
+        # no outgoing (no self-referential) edges, cannot reach reporting
+        unreachable = True
+        for (source, dest), label in mona_data['transition_dict'].items():
+            if source == state and dest != state:
+                unreachable = False
+        
+        # If unreachable, remove the state
+        if unreachable:
+            states_to_remove.append(state)
+
+
+    for state in states_to_remove:
+
+        # Remove state from states
+        assert state in mona_data['states']
+        mona_data['states'].remove(state)
+
+        # Reduce num_states by one
+        mona_data['num_states'] -= 1
+
+        # Remove from rejecting states
+        assert state in mona_data['rejecting_states']
+        mona_data['rejecting_states'].remove(state)
+
+        # Remove all relevant transitions
+        mona_data['transition_dict'] = remove_state_from_transition_dict(mona_data['transition_dict'], state)
+            
+            
+
