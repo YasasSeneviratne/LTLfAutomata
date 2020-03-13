@@ -20,6 +20,10 @@ reverse_input_format="${input_prefix}.rfol"
 output_prefix="${output_dir}/rule%d"
 output_format="${output_prefix}.fol"
 reverse_output_format="${output_prefix}.rfol"
+
+log_format="${output_prefix}.log"
+reverse_log_format="${output_prefix}.rlog"
+
 dfa_prefix="${dfa_dir}/rule%d"
 dfa_format="${dfa_prefix}.out"
 reverse_dfa_format="${dfa_prefix}.rout"
@@ -28,9 +32,19 @@ seed=${RANDOM}
 
 echo "Generating rules (random seed: ${seed})..."
 
-python3 CombineRules.py ${seed} ${number_of_rules} ${number_of_patterns_per_rule} ${number_of_vars} ${output_format} ${input_format}
+python3 CombineRules.py ${seed} ${number_of_rules} ${number_of_patterns_per_rule} ${number_of_vars} ${output_format} ${log_format} ${input_format}
 
-python3 CombineRules.py ${seed} ${number_of_rules} ${number_of_patterns_per_rule} ${number_of_vars} ${reverse_output_format} ${reverse_input_format}
+python3 CombineRules.py ${seed} ${number_of_rules} ${number_of_patterns_per_rule} ${number_of_vars} ${reverse_output_format} ${reverse_log_format} ${reverse_input_format}
+
+echo "Checking diffs between logs (all diffs should be empty)..."
+
+for i in $(seq 0 $((number_of_rules - 1)))
+do
+    echo "Log for rule ${i}..."
+    log_file=$(printf "${log_format}" ${i})
+    reverse_log_file=$(printf "${reverse_log_format}" ${i})
+    diff ${log_file} ${reverse_log_file}
+done
 
 echo "Constructing DFAs..."
 
