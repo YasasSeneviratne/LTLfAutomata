@@ -1,8 +1,9 @@
 #!/usr/bin/env python2
 
 """
-    The purpose of this script is to convert an ANML file into a full hardware implementation
-    for deployment on AWS with APSim.
+    The purpose of this script is to convert a directory of ANML files
+     or Truth Table files into a full hardware implementation for 
+     deployment on AWS with APSim/Grapefruit.
     !! To use it, you must have APSim installed.
     Install from here: https://github.com/tjt7a/APSim
 
@@ -14,13 +15,15 @@ import shutil
 from automata.utility.utility import minimize_automata
 import automata.HDL.hdl_generator as hd_gen
 import glob
+from utils import VerilogTools
 
 dbw = None
 
 # Get the usage string
 def usage():
     usage = "----------------- Usage ----------------\n"
-    usage += "./APSim.py <automata symbol bit width> <input ANML file directory> <automata per stage> [--symbolic]"
+    usage += "./APSim.py <automata symbol bit width> <input file directory (ANML or Truth Table)> <automata per stage> [--symbolic]\n"
+    usage += "automata symbol bit width: number of input variables; automata per stage: designate number of automata per pipeline stage\n"
     return usage
 
 # Process ANML
@@ -31,13 +34,6 @@ def process_anml(bitwidth, input_anml_directory, automata_per_stage):
 
     anml_input_files = glob.glob(input_anml_directory + '/*.anml')
     print "ANML Files: ", anml_input_files
-
-    # Parse the ANML file
-    automata = atma.parse_anml_file(anml_input_file)
-
-    # Minimizing the automata with NFA heuristics
-    print "Minimizing Automata"
-    minimize_automata(automata)
 
     # Clean up directory
     shutil.rmtree(output_hdl_directory, ignore_errors=True)
@@ -63,6 +59,14 @@ def process_anml(bitwidth, input_anml_directory, automata_per_stage):
 
         # Assign each unique automaton its own unique name or the HDL generator won't work
         automata.id = 'an{}'.format(index)
+        
+        # Parse the ANML file
+        automata = atma.parse_anml_file(anml_input_file)
+
+        # Minimizing the automata with NFA heuristics
+        print "Minimizing Automata"
+        minimize_automata(automata)
+
 
         # Drawing automata graph
         print "Drawing automata svg graph"
@@ -109,20 +113,20 @@ def process_truthtable(bitwidth, input_anml_directory, automata_per_stage):
     print "Folder name to store the HDLs: ", hdl_folder_name
 
     # Create a hardware Generator
+    # for now, we'll only allow either symbolic or explicit automata; no mixing
     generator_ins = hd_gen.HDL_Gen(path=os.path.join(output_hdl_directory, hdl_folder_name), before_match_reg=False,
                                    after_match_reg=False, ste_type=1,
                                    total_input_len=dbw, symbolic=True)
 
 
     # Iterate through the ANML files in the directory
-    for index, anml_input_file in enumerate(truthtable_input_files):
+    for index, truth_table_input_file in enumerate(truthtable_input_files):
 
         # Assign each unique automaton its own unique name or the HDL generator won't work
         automata.id = 'an{}'.format(index)
 
-        # Drawing automata graph
-        print "Drawing automata svg graph"
-        automata.draw_graph(anml_input_file + "_minimized_hw.svg")
+        # Build a Truthtable module with VerilogTools
+        VerilogTools.build_truthtable(truth_table_input_file, automata.id + '.v')
 
         # Register this automaton
         generator_ins.register_automata(atm=automata, use_compression=False)
@@ -161,8 +165,8 @@ if __name__ == '__main__':
         print "Error with first argument: {}; should be a positive integer".format(sys.argv[1])
         exit(2)
 
-    # This is the directory that contains the ANML files
-    input_anml_directory = sys.argv[2]
+    # This is the directory that contains the ANML or Truthtable files
+    input_directory = sys.argv[2]
 
     # This is the number of automata set per stage in the pipeline
     if sys.argv[3].isdigit():
@@ -173,6 +177,6 @@ if __name__ == '__main__':
 
     # Process either Truth Tables or ANML files
     if symbolic:
-        process_truthtable(bdw, input_anml_directory, automata_per_stage)
+        process_truthtable(bdw, input_directory, automata_per_stage)
     else:
-        process_anml(bdw, input_anml_directory, automata_per_stage)
+        process_anml(bdw, input_directory, automata_per_stage)
