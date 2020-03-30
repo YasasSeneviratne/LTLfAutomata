@@ -1,6 +1,7 @@
 '''
     The purpose of this tool is to convert our truth-table
-    into a Verilog primitive for use within our FPGA code.
+    into a set of Verilog modules for use within our FPGA code.
+    There is one truth table module per bit and one for reporting.
 '''
 
 from enum import Enum
@@ -163,7 +164,7 @@ def parse_truth_tables(truth_table_data):
     return results
 
 
-def build_primitive_truthtable(truth_table_file, output_verilog_file):
+def build_truthtable(truth_table_file, output_verilog_file):
     """
     This function parses a truth table (.tt) file and generates
     custom primitive truthtable files.
@@ -247,7 +248,7 @@ def make_combinationatorial_udp(truth_table):
 
 def make_sequential_udp(truth_table):
     """
-    This function generates a TruthTable Verilog user-definied primitive
+    This function generates a TruthTable Verilog module
     This is used for state transition logic, which is sequential
     """
 
@@ -346,12 +347,12 @@ def make_module(truth_tables):
             wires.add(truth_table.header['next_state'])
         
         elif truth_table.type == TruthTableType.REPORTING:
-            outputs.add(truth_table.header['outputput'])
+            outputs.add(truth_table.header['output'])
 
     verilog_code = "module TransitionTable({}, clk, run, rst, report);\n".format(', '.join(inputs))
     verilog_code += "\n"
     verilog_code += "\tinput {}, clk, run, rst;\n".format(', '.join(inputs))
-    verilog_code += "\toutput wire {}};\n".format(', '.join(outputs))
+    verilog_code += "\toutput wire {};\n".format(', '.join(outputs))
     verilog_code += "\twire {};\n".format(', '.join(wires))
     verilog_code += "\n"
 
@@ -424,4 +425,4 @@ if __name__ == '__main__':
     tt_input = sys.argv[1] # This is the truth table input
     verilog_output = sys.argv[2] # This is the verilog output
 
-    build_primitive_truthtable(tt_input, verilog_output)
+    build_truthtable(tt_input, verilog_output)

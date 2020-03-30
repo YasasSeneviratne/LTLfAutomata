@@ -111,7 +111,10 @@ def parse_mona(mona_file, translate_table='signal_to_symbol_translation.txt', re
             }
 
     # Removes superfluous state 0 added to the automaton by MONA
-    remove_zero_state(mona_data)
+    try:
+        remove_zero_state(mona_data)
+    except ValueError:
+        print('Mona File {} does not contain a transition it should'.format(mona_file))
 
     # Remove unreachable states from the MONA-generated DFA
     if remove_unreachable:
@@ -223,7 +226,8 @@ def remove_zero_state(mona_data):
         del mona_data['transition_dict'][("0", "1")]
     except KeyError:
         print("Something went wrong; MONA DFA expected to have transition 0 -[X]-> 1")
-        exit(-1)
+        raise ValueError
+        #exit(-1)
 
     # After deleting the transition 0 -[X]-> 1, there should be no more transitions from or to state 0
     zero_edges = {(source, dest)

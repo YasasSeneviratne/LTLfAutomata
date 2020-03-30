@@ -21,12 +21,12 @@ def symbol_tuple_to_character_class(symbol_tuple):
 
 # A function for converting between non-homogeneous
 # and homogeneous automata
-def make_homogeneous(mona_data, filename):
+def make_homogeneous(mona_data, filename, aId='an1'):
 
     ste_count = 0
 
     # Create an Automata network
-    anml = Anml.Anml()
+    anml = Anml.Anml(aId=aId)
 
     # Grab details about the DFA
     states = mona_data['states']
@@ -58,6 +58,7 @@ def make_homogeneous(mona_data, filename):
             
             if dest in accepting_states:
                 accepting = True
+                
                 # For now, let's just report with a 1
                 report_code = 1
             else:
