@@ -1,0 +1,336 @@
+MONA v1.4-17 for WS1S/WS2S
+Copyright (C) 1997-2013 Aarhus University
+
+PARSING
+Time: 00:00:00.00
+
+CODE GENERATION
+DAG hits: 1345, nodes: 66
+Time: 00:00:00.00
+
+REDUCTION
+Projections removed: 0 (of 7)
+Products removed: 3 (of 35)
+Other nodes removed: 0 (of 23)
+DAG nodes after reduction: 62
+Time: 00:00:00.00
+
+AUTOMATON CONSTRUCTION
+                                                                            1% completed (1 automata in memory, 0MB memory used)                                                                            3% completed (2 automata in memory, 0MB memory used)                                                                            4% completed (3 automata in memory, 0MB memory used)                                                                            6% completed (3 automata in memory, 0MB memory used)                                                                            8% completed (3 automata in memory, 0MB memory used)                                                                            9% completed (4 automata in memory, 0MB memory used)                                                                            11% completed (4 automata in memory, 0MB memory used)                                                                            12% completed (4 automata in memory, 0MB memory used)                                                                            14% completed (5 automata in memory, 0MB memory used)                                                                            16% completed (5 automata in memory, 0MB memory used)                                                                            17% completed (4 automata in memory, 0MB memory used)                                                                            19% completed (4 automata in memory, 0MB memory used)                                                                            20% completed (4 automata in memory, 0MB memory used)                                                                            22% completed (4 automata in memory, 0MB memory used)                                                                            24% completed (4 automata in memory, 0MB memory used)                                                                            25% completed (5 automata in memory, 0MB memory used)                                                                            27% completed (5 automata in memory, 0MB memory used)                                                                            29% completed (5 automata in memory, 0MB memory used)                                                                            30% completed (5 automata in memory, 0MB memory used)                                                                            32% completed (5 automata in memory, 0MB memory used)                                                                            33% completed (5 automata in memory, 0MB memory used)                                                                            35% completed (5 automata in memory, 0MB memory used)                                                                            37% completed (5 automata in memory, 0MB memory used)                                                                            38% completed (5 automata in memory, 0MB memory used)                                                                            40% completed (4 automata in memory, 0MB memory used)                                                                            41% completed (4 automata in memory, 0MB memory used)                                                                            43% completed (4 automata in memory, 0MB memory used)                                                                            45% completed (5 automata in memory, 0MB memory used)                                                                            46% completed (7 automata in memory, 0MB memory used)                                                                            48% completed (7 automata in memory, 0MB memory used)                                                                            50% completed (7 automata in memory, 0MB memory used)                                                                            51% completed (8 automata in memory, 0MB memory used)                                                                            53% completed (7 automata in memory, 0MB memory used)                                                                            54% completed (7 automata in memory, 0MB memory used)                                                                            56% completed (7 automata in memory, 0MB memory used)                                                                            58% completed (7 automata in memory, 0MB memory used)                                                                            59% completed (7 automata in memory, 0MB memory used)                                                                            61% completed (7 automata in memory, 0MB memory used)                                                                            62% completed (6 automata in memory, 0MB memory used)                                                                            64% completed (6 automata in memory, 0MB memory used)                                                                            66% completed (7 automata in memory, 0MB memory used)                                                                            67% completed (6 automata in memory, 0MB memory used)                                                                            69% completed (7 automata in memory, 0MB memory used)                                                                            70% completed (6 automata in memory, 0MB memory used)                                                                            72% completed (5 automata in memory, 0MB memory used)                                                                            74% completed (5 automata in memory, 0MB memory used)                                                                            75% completed (4 automata in memory, 0MB memory used)                                                                            77% completed (4 automata in memory, 0MB memory used)                                                                            79% completed (4 automata in memory, 0MB memory used)                                                                            80% completed (4 automata in memory, 0MB memory used)                                                                            82% completed (3 automata in memory, 0MB memory used)                                                                            83% completed (3 automata in memory, 0MB memory used)                                                                            85% completed (5 automata in memory, 0MB memory used)                                                                            87% completed (5 automata in memory, 0MB memory used)                                                                            88% completed (5 automata in memory, 0MB memory used)                                                                            90% completed (4 automata in memory, 0MB memory used)                                                                            91% completed (5 automata in memory, 0MB memory used)                                                                            93% completed (4 automata in memory, 0MB memory used)                                                                            95% completed (4 automata in memory, 0MB memory used)                                                                            96% completed (3 automata in memory, 0MB memory used)                                                                            98% completed (2 automata in memory, 0MB memory used)                                                                            100% completed                                                                         
+Time: 00:00:00.00
+
+DFA for formula with free variables: I4 I3 I5 I9 I0 I1 
+Initial state: 0
+Accepting states: 2 3 6 7 13 14 17 18 
+Rejecting states: 0 1 4 5 8 9 10 11 12 15 16 19 20 21 22 23 24 25 26 
+
+Automaton has 27 states and 98 BDD-nodes
+Transitions:
+State 0: XXXXXX -> state 1
+State 1: 000X00 -> state 2
+State 1: 000X01 -> state 3
+State 1: 000X10 -> state 4
+State 1: 000X11 -> state 5
+State 1: 001000 -> state 6
+State 1: 001001 -> state 7
+State 1: 001010 -> state 8
+State 1: 001011 -> state 9
+State 1: 0011XX -> state 10
+State 1: 010X00 -> state 11
+State 1: 010X01 -> state 12
+State 1: 010X10 -> state 13
+State 1: 010X11 -> state 14
+State 1: 011000 -> state 15
+State 1: 011001 -> state 16
+State 1: 011010 -> state 17
+State 1: 011011 -> state 18
+State 1: 0111XX -> state 10
+State 1: 100X00 -> state 19
+State 1: 100X01 -> state 3
+State 1: 100X10 -> state 20
+State 1: 100X11 -> state 5
+State 1: 101000 -> state 21
+State 1: 101001 -> state 7
+State 1: 101010 -> state 22
+State 1: 101011 -> state 9
+State 1: 1011XX -> state 10
+State 1: 110X00 -> state 23
+State 1: 110X01 -> state 12
+State 1: 110X10 -> state 24
+State 1: 110X11 -> state 14
+State 1: 111000 -> state 25
+State 1: 111001 -> state 16
+State 1: 111010 -> state 26
+State 1: 111011 -> state 18
+State 1: 1111XX -> state 10
+State 2: 000X00 -> state 2
+State 2: 000X01 -> state 3
+State 2: 000X10 -> state 4
+State 2: 000X11 -> state 5
+State 2: 001000 -> state 6
+State 2: 001001 -> state 7
+State 2: 001010 -> state 8
+State 2: 001011 -> state 9
+State 2: 0011XX -> state 10
+State 2: 010X00 -> state 11
+State 2: 010X01 -> state 12
+State 2: 010X10 -> state 13
+State 2: 010X11 -> state 14
+State 2: 011000 -> state 15
+State 2: 011001 -> state 16
+State 2: 011010 -> state 17
+State 2: 011011 -> state 18
+State 2: 0111XX -> state 10
+State 2: 100X00 -> state 19
+State 2: 100X01 -> state 3
+State 2: 100X10 -> state 20
+State 2: 100X11 -> state 5
+State 2: 101000 -> state 21
+State 2: 101001 -> state 7
+State 2: 101010 -> state 22
+State 2: 101011 -> state 9
+State 2: 1011XX -> state 10
+State 2: 110X00 -> state 23
+State 2: 110X01 -> state 12
+State 2: 110X10 -> state 24
+State 2: 110X11 -> state 14
+State 2: 111000 -> state 25
+State 2: 111001 -> state 16
+State 2: 111010 -> state 26
+State 2: 111011 -> state 18
+State 2: 1111XX -> state 10
+State 3: X00X0X -> state 3
+State 3: X00X1X -> state 5
+State 3: X0100X -> state 7
+State 3: X0101X -> state 9
+State 3: X011XX -> state 10
+State 3: X10X0X -> state 12
+State 3: X10X1X -> state 14
+State 3: X1100X -> state 16
+State 3: X1101X -> state 18
+State 3: X111XX -> state 10
+State 4: 000XX0 -> state 4
+State 4: 000XX1 -> state 5
+State 4: 0010X0 -> state 8
+State 4: 0010X1 -> state 9
+State 4: 0011XX -> state 10
+State 4: 010XX0 -> state 13
+State 4: 010XX1 -> state 14
+State 4: 0110X0 -> state 17
+State 4: 0110X1 -> state 18
+State 4: 0111XX -> state 10
+State 4: 100XX0 -> state 20
+State 4: 100XX1 -> state 5
+State 4: 1010X0 -> state 22
+State 4: 1010X1 -> state 9
+State 4: 1011XX -> state 10
+State 4: 110XX0 -> state 24
+State 4: 110XX1 -> state 14
+State 4: 1110X0 -> state 26
+State 4: 1110X1 -> state 18
+State 4: 1111XX -> state 10
+State 5: X00XXX -> state 5
+State 5: X010XX -> state 9
+State 5: X011XX -> state 10
+State 5: X10XXX -> state 14
+State 5: X110XX -> state 18
+State 5: X111XX -> state 10
+State 6: 00X000 -> state 6
+State 6: 00X001 -> state 7
+State 6: 00X010 -> state 8
+State 6: 00X011 -> state 9
+State 6: 00X1XX -> state 10
+State 6: 01X000 -> state 15
+State 6: 01X001 -> state 16
+State 6: 01X010 -> state 17
+State 6: 01X011 -> state 18
+State 6: 01X1XX -> state 10
+State 6: 10X000 -> state 21
+State 6: 10X001 -> state 7
+State 6: 10X010 -> state 22
+State 6: 10X011 -> state 9
+State 6: 10X1XX -> state 10
+State 6: 11X000 -> state 25
+State 6: 11X001 -> state 16
+State 6: 11X010 -> state 26
+State 6: 11X011 -> state 18
+State 6: 11X1XX -> state 10
+State 7: X0X00X -> state 7
+State 7: X0X01X -> state 9
+State 7: X0X1XX -> state 10
+State 7: X1X00X -> state 16
+State 7: X1X01X -> state 18
+State 7: X1X1XX -> state 10
+State 8: 00X0X0 -> state 8
+State 8: 00X0X1 -> state 9
+State 8: 00X1XX -> state 10
+State 8: 01X0X0 -> state 17
+State 8: 01X0X1 -> state 18
+State 8: 01X1XX -> state 10
+State 8: 10X0X0 -> state 22
+State 8: 10X0X1 -> state 9
+State 8: 10X1XX -> state 10
+State 8: 11X0X0 -> state 26
+State 8: 11X0X1 -> state 18
+State 8: 11X1XX -> state 10
+State 9: X0X0XX -> state 9
+State 9: X0X1XX -> state 10
+State 9: X1X0XX -> state 18
+State 9: X1X1XX -> state 10
+State 10: XXXXXX -> state 10
+State 11: 0X0X00 -> state 11
+State 11: 0X0X01 -> state 12
+State 11: 0X0X10 -> state 13
+State 11: 0X0X11 -> state 14
+State 11: 0X1000 -> state 15
+State 11: 0X1001 -> state 16
+State 11: 0X1010 -> state 17
+State 11: 0X1011 -> state 18
+State 11: 0X11XX -> state 10
+State 11: 1X0X00 -> state 23
+State 11: 1X0X01 -> state 12
+State 11: 1X0X10 -> state 24
+State 11: 1X0X11 -> state 14
+State 11: 1X1000 -> state 25
+State 11: 1X1001 -> state 16
+State 11: 1X1010 -> state 26
+State 11: 1X1011 -> state 18
+State 11: 1X11XX -> state 10
+State 12: XX0X0X -> state 12
+State 12: XX0X1X -> state 14
+State 12: XX100X -> state 16
+State 12: XX101X -> state 18
+State 12: XX11XX -> state 10
+State 13: 0X0XX0 -> state 13
+State 13: 0X0XX1 -> state 14
+State 13: 0X10X0 -> state 17
+State 13: 0X10X1 -> state 18
+State 13: 0X11XX -> state 10
+State 13: 1X0XX0 -> state 24
+State 13: 1X0XX1 -> state 14
+State 13: 1X10X0 -> state 26
+State 13: 1X10X1 -> state 18
+State 13: 1X11XX -> state 10
+State 14: XX0XXX -> state 14
+State 14: XX10XX -> state 18
+State 14: XX11XX -> state 10
+State 15: 0XX000 -> state 15
+State 15: 0XX001 -> state 16
+State 15: 0XX010 -> state 17
+State 15: 0XX011 -> state 18
+State 15: 0XX1XX -> state 10
+State 15: 1XX000 -> state 25
+State 15: 1XX001 -> state 16
+State 15: 1XX010 -> state 26
+State 15: 1XX011 -> state 18
+State 15: 1XX1XX -> state 10
+State 16: XXX00X -> state 16
+State 16: XXX01X -> state 18
+State 16: XXX1XX -> state 10
+State 17: 0XX0X0 -> state 17
+State 17: 0XX0X1 -> state 18
+State 17: 0XX1XX -> state 10
+State 17: 1XX0X0 -> state 26
+State 17: 1XX0X1 -> state 18
+State 17: 1XX1XX -> state 10
+State 18: XXX0XX -> state 18
+State 18: XXX1XX -> state 10
+State 19: X00X00 -> state 19
+State 19: X00X01 -> state 3
+State 19: X00X10 -> state 20
+State 19: X00X11 -> state 5
+State 19: X01000 -> state 21
+State 19: X01001 -> state 7
+State 19: X01010 -> state 22
+State 19: X01011 -> state 9
+State 19: X011XX -> state 10
+State 19: X10X00 -> state 23
+State 19: X10X01 -> state 12
+State 19: X10X10 -> state 24
+State 19: X10X11 -> state 14
+State 19: X11000 -> state 25
+State 19: X11001 -> state 16
+State 19: X11010 -> state 26
+State 19: X11011 -> state 18
+State 19: X111XX -> state 10
+State 20: X00XX0 -> state 20
+State 20: X00XX1 -> state 5
+State 20: X010X0 -> state 22
+State 20: X010X1 -> state 9
+State 20: X011XX -> state 10
+State 20: X10XX0 -> state 24
+State 20: X10XX1 -> state 14
+State 20: X110X0 -> state 26
+State 20: X110X1 -> state 18
+State 20: X111XX -> state 10
+State 21: X0X000 -> state 21
+State 21: X0X001 -> state 7
+State 21: X0X010 -> state 22
+State 21: X0X011 -> state 9
+State 21: X0X1XX -> state 10
+State 21: X1X000 -> state 25
+State 21: X1X001 -> state 16
+State 21: X1X010 -> state 26
+State 21: X1X011 -> state 18
+State 21: X1X1XX -> state 10
+State 22: X0X0X0 -> state 22
+State 22: X0X0X1 -> state 9
+State 22: X0X1XX -> state 10
+State 22: X1X0X0 -> state 26
+State 22: X1X0X1 -> state 18
+State 22: X1X1XX -> state 10
+State 23: XX0X00 -> state 23
+State 23: XX0X01 -> state 12
+State 23: XX0X10 -> state 24
+State 23: XX0X11 -> state 14
+State 23: XX1000 -> state 25
+State 23: XX1001 -> state 16
+State 23: XX1010 -> state 26
+State 23: XX1011 -> state 18
+State 23: XX11XX -> state 10
+State 24: XX0XX0 -> state 24
+State 24: XX0XX1 -> state 14
+State 24: XX10X0 -> state 26
+State 24: XX10X1 -> state 18
+State 24: XX11XX -> state 10
+State 25: XXX000 -> state 25
+State 25: XXX001 -> state 16
+State 25: XXX010 -> state 26
+State 25: XXX011 -> state 18
+State 25: XXX1XX -> state 10
+State 26: XXX0X0 -> state 26
+State 26: XXX0X1 -> state 18
+State 26: XXX1XX -> state 10
+
+ANALYSIS
+A counter-example of least length (1) is:
+I4              X 0
+I3              X 0
+I5              X 0
+I9              X X
+I0              X 1
+I1              X 0
+
+I4 = {}
+I3 = {}
+I5 = {}
+I9 = {}
+I0 = {0}
+I1 = {}
+
+A satisfying example of least length (1) is:
+I4              X 0
+I3              X 0
+I5              X 0
+I9              X X
+I0              X 0
+I1              X 0
+
+I4 = {}
+I3 = {}
+I5 = {}
+I9 = {}
+I0 = {}
+I1 = {}
+
+Total time: 00:00:00.00

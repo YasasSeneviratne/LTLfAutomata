@@ -1,0 +1,158 @@
+MONA v1.4-17 for WS1S/WS2S
+Copyright (C) 1997-2013 Aarhus University
+
+PARSING
+Time: 00:00:00.00
+
+CODE GENERATION
+DAG hits: 1794, nodes: 78
+Time: 00:00:00.00
+
+REDUCTION
+Projections removed: 0 (of 9)
+Products removed: 3 (of 42)
+Other nodes removed: 0 (of 26)
+DAG nodes after reduction: 74
+Time: 00:00:00.00
+
+AUTOMATON CONSTRUCTION
+                                                                            1% completed (1 automata in memory, 0MB memory used)                                                                            2% completed (2 automata in memory, 0MB memory used)                                                                            4% completed (3 automata in memory, 0MB memory used)                                                                            5% completed (3 automata in memory, 0MB memory used)                                                                            6% completed (3 automata in memory, 0MB memory used)                                                                            8% completed (4 automata in memory, 0MB memory used)                                                                            9% completed (4 automata in memory, 0MB memory used)                                                                            10% completed (4 automata in memory, 0MB memory used)                                                                            12% completed (5 automata in memory, 0MB memory used)                                                                            13% completed (5 automata in memory, 0MB memory used)                                                                            14% completed (4 automata in memory, 0MB memory used)                                                                            16% completed (4 automata in memory, 0MB memory used)                                                                            17% completed (4 automata in memory, 0MB memory used)                                                                            18% completed (4 automata in memory, 0MB memory used)                                                                            20% completed (4 automata in memory, 0MB memory used)                                                                            21% completed (5 automata in memory, 0MB memory used)                                                                            22% completed (5 automata in memory, 0MB memory used)                                                                            24% completed (5 automata in memory, 0MB memory used)                                                                            25% completed (5 automata in memory, 0MB memory used)                                                                            27% completed (5 automata in memory, 0MB memory used)                                                                            28% completed (6 automata in memory, 0MB memory used)                                                                            29% completed (5 automata in memory, 0MB memory used)                                                                            31% completed (5 automata in memory, 0MB memory used)                                                                            32% completed (7 automata in memory, 0MB memory used)                                                                            33% completed (7 automata in memory, 0MB memory used)                                                                            35% completed (7 automata in memory, 0MB memory used)                                                                            36% completed (8 automata in memory, 0MB memory used)                                                                            37% completed (7 automata in memory, 0MB memory used)                                                                            39% completed (7 automata in memory, 0MB memory used)                                                                            40% completed (7 automata in memory, 0MB memory used)                                                                            41% completed (7 automata in memory, 0MB memory used)                                                                            43% completed (6 automata in memory, 0MB memory used)                                                                            44% completed (6 automata in memory, 0MB memory used)                                                                            45% completed (6 automata in memory, 0MB memory used)                                                                            47% completed (6 automata in memory, 0MB memory used)                                                                            48% completed (7 automata in memory, 0MB memory used)                                                                            50% completed (7 automata in memory, 0MB memory used)                                                                            51% completed (7 automata in memory, 0MB memory used)                                                                            52% completed (8 automata in memory, 0MB memory used)                                                                            54% completed (7 automata in memory, 0MB memory used)                                                                            55% completed (8 automata in memory, 0MB memory used)                                                                            56% completed (7 automata in memory, 0MB memory used)                                                                            58% completed (7 automata in memory, 0MB memory used)                                                                            59% completed (7 automata in memory, 0MB memory used)                                                                            60% completed (7 automata in memory, 0MB memory used)                                                                            62% completed (7 automata in memory, 0MB memory used)                                                                            63% completed (7 automata in memory, 0MB memory used)                                                                            64% completed (8 automata in memory, 0MB memory used)                                                                            66% completed (8 automata in memory, 0MB memory used)                                                                            67% completed (7 automata in memory, 0MB memory used)                                                                            68% completed (6 automata in memory, 0MB memory used)                                                                            70% completed (5 automata in memory, 0MB memory used)                                                                            71% completed (5 automata in memory, 0MB memory used)                                                                            72% completed (5 automata in memory, 0MB memory used)                                                                            74% completed (5 automata in memory, 0MB memory used)                                                                            75% completed (4 automata in memory, 0MB memory used)                                                                            77% completed (4 automata in memory, 0MB memory used)                                                                            78% completed (4 automata in memory, 0MB memory used)                                                                            79% completed (4 automata in memory, 0MB memory used)                                                                            81% completed (5 automata in memory, 0MB memory used)                                                                            82% completed (5 automata in memory, 0MB memory used)                                                                            83% completed (5 automata in memory, 0MB memory used)                                                                            85% completed (4 automata in memory, 0MB memory used)                                                                            86% completed (4 automata in memory, 0MB memory used)                                                                            87% completed (5 automata in memory, 0MB memory used)                                                                            89% completed (5 automata in memory, 0MB memory used)                                                                            90% completed (6 automata in memory, 0MB memory used)                                                                            91% completed (6 automata in memory, 0MB memory used)                                                                            93% completed (5 automata in memory, 0MB memory used)                                                                            94% completed (5 automata in memory, 0MB memory used)                                                                            95% completed (4 automata in memory, 0MB memory used)                                                                            97% completed (3 automata in memory, 0MB memory used)                                                                            98% completed (2 automata in memory, 0MB memory used)                                                                            100% completed                                                                         
+Time: 00:00:00.00
+
+DFA for formula with free variables: I3 I5 I9 I8 I7 
+Initial state: 0
+Accepting states: 4 7 12 13 
+Rejecting states: 0 1 2 3 5 6 8 9 10 11 
+
+Automaton has 14 states and 64 BDD-nodes
+Transitions:
+State 0: XXXXX -> state 1
+State 1: 00000 -> state 1
+State 1: 00001 -> state 2
+State 1: 00010 -> state 3
+State 1: 00011 -> state 2
+State 1: 00100 -> state 4
+State 1: 00101 -> state 5
+State 1: 00110 -> state 6
+State 1: 00111 -> state 5
+State 1: 01000 -> state 7
+State 1: 01001 -> state 8
+State 1: 01010 -> state 9
+State 1: 01011 -> state 8
+State 1: 011XX -> state 10
+State 1: 100X0 -> state 10
+State 1: 100X1 -> state 11
+State 1: 101X0 -> state 10
+State 1: 101X1 -> state 12
+State 1: 110X0 -> state 10
+State 1: 110X1 -> state 13
+State 1: 111XX -> state 10
+State 2: 000XX -> state 2
+State 2: 001XX -> state 5
+State 2: 010XX -> state 8
+State 2: 011XX -> state 10
+State 2: 100XX -> state 11
+State 2: 101XX -> state 12
+State 2: 110XX -> state 13
+State 2: 111XX -> state 10
+State 3: 000X0 -> state 3
+State 3: 000X1 -> state 2
+State 3: 001X0 -> state 6
+State 3: 001X1 -> state 5
+State 3: 010X0 -> state 9
+State 3: 010X1 -> state 8
+State 3: 011XX -> state 10
+State 3: 100X0 -> state 10
+State 3: 100X1 -> state 11
+State 3: 101X0 -> state 10
+State 3: 101X1 -> state 12
+State 3: 110X0 -> state 10
+State 3: 110X1 -> state 13
+State 3: 111XX -> state 10
+State 4: 00X00 -> state 4
+State 4: 00X01 -> state 5
+State 4: 00X10 -> state 6
+State 4: 00X11 -> state 5
+State 4: 01XXX -> state 10
+State 4: 10XX0 -> state 10
+State 4: 10XX1 -> state 12
+State 4: 11XXX -> state 10
+State 5: 00XXX -> state 5
+State 5: 01XXX -> state 10
+State 5: 10XXX -> state 12
+State 5: 11XXX -> state 10
+State 6: 00XX0 -> state 6
+State 6: 00XX1 -> state 5
+State 6: 01XXX -> state 10
+State 6: 10XX0 -> state 10
+State 6: 10XX1 -> state 12
+State 6: 11XXX -> state 10
+State 7: 0X000 -> state 7
+State 7: 0X001 -> state 8
+State 7: 0X010 -> state 9
+State 7: 0X011 -> state 8
+State 7: 0X1XX -> state 10
+State 7: 1X0X0 -> state 10
+State 7: 1X0X1 -> state 13
+State 7: 1X1XX -> state 10
+State 8: 0X0XX -> state 8
+State 8: 0X1XX -> state 10
+State 8: 1X0XX -> state 13
+State 8: 1X1XX -> state 10
+State 9: 0X0X0 -> state 9
+State 9: 0X0X1 -> state 8
+State 9: 0X1XX -> state 10
+State 9: 1X0X0 -> state 10
+State 9: 1X0X1 -> state 13
+State 9: 1X1XX -> state 10
+State 10: XXXXX -> state 10
+State 11: 000X0 -> state 11
+State 11: 000X1 -> state 2
+State 11: 001X0 -> state 12
+State 11: 001X1 -> state 5
+State 11: 010X0 -> state 13
+State 11: 010X1 -> state 8
+State 11: 011XX -> state 10
+State 11: 100XX -> state 11
+State 11: 101XX -> state 12
+State 11: 110XX -> state 13
+State 11: 111XX -> state 10
+State 12: 00XX0 -> state 12
+State 12: 00XX1 -> state 5
+State 12: 01XXX -> state 10
+State 12: 10XXX -> state 12
+State 12: 11XXX -> state 10
+State 13: 0X0X0 -> state 13
+State 13: 0X0X1 -> state 8
+State 13: 0X1XX -> state 10
+State 13: 1X0XX -> state 13
+State 13: 1X1XX -> state 10
+
+ANALYSIS
+A counter-example of least length (1) is:
+I3              X 0
+I5              X 0
+I9              X 0
+I8              X 0
+I7              X 0
+
+I3 = {}
+I5 = {}
+I9 = {}
+I8 = {}
+I7 = {}
+
+A satisfying example of least length (1) is:
+I3              X 0
+I5              X 0
+I9              X 1
+I8              X 0
+I7              X 0
+
+I3 = {}
+I5 = {}
+I9 = {0}
+I8 = {}
+I7 = {}
+
+Total time: 00:00:00.00
