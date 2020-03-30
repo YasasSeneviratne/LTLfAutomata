@@ -16,6 +16,10 @@ from automata.utility.utility import minimize_automata
 import automata.HDL.hdl_generator as hd_gen
 import glob
 from utils import VerilogTools
+from automata import Automatanetwork
+from automata.elemnts.ste import S_T_E
+from automata.elemnts.element import StartType
+
 
 dbw = None
 
@@ -23,16 +27,19 @@ dbw = None
 def usage():
     usage = "----------------- Usage ----------------\n"
     usage += "./APSim.py <automata symbol bit width> <input file directory (ANML or Truth Table)> <automata per stage> [--symbolic]\n"
-    usage += "automata symbol bit width: number of input variables; automata per stage: designate number of automata per pipeline stage\n"
+    usage += "\tautomata symbol bit width: number of input variables\n"
+    usage += "\tinput file directory: the directory that contains the automata ANML or Truth Table Files\n"
+    usage += "\tautomata per stage: designate number of automata per pipeline stage\n"
+    usage += "\t--symbolic: This flag allows for symbolic automata construction from truth tables\n"
     return usage
 
-# Process ANML
-def process_anml(bitwidth, input_anml_directory, automata_per_stage):
+# Process ANML : these are necessarily Homogeneous finite state automata
+def process_anml(bitwidth, input_directory, automata_per_stage):
 
     # This is the directory name to be created for HDL files
-    output_hdl_directory = input_anml_directory + '_' + str(bitwidth) + '_' + str(automata_per_stage)
+    output_hdl_directory = input_directory + '/' + str(bitwidth) + '_' + str(automata_per_stage)
 
-    anml_input_files = glob.glob(input_anml_directory + '/*.anml')
+    anml_input_files = glob.glob(input_directory + '/*.anml')
     print "ANML Files: ", anml_input_files
 
     # Clean up directory
@@ -48,7 +55,7 @@ def process_anml(bitwidth, input_anml_directory, automata_per_stage):
     print "Folder name to store the HDLs: ", hdl_folder_name
 
     # Create a hardware Generator
-    generator_ins = hd_gen.HDL_Gen(path=os.path.join(output_hdl_directory, hdl_folder_name), before_match_reg=False,
+    generator_ins = hd_gen.HDL_Gen(path=hdl_folder_name, before_match_reg=False,
                                    after_match_reg=False, ste_type=1,
                                    total_input_len=dbw, symbolic=False)
 
@@ -56,9 +63,6 @@ def process_anml(bitwidth, input_anml_directory, automata_per_stage):
 
     # Iterate through the ANML files in the directory
     for index, anml_input_file in enumerate(anml_input_files):
-
-        # Assign each unique automaton its own unique name or the HDL generator won't work
-        automata.id = 'an{}'.format(index)
         
         # Parse the ANML file
         automata = atma.parse_anml_file(anml_input_file)
@@ -67,10 +71,9 @@ def process_anml(bitwidth, input_anml_directory, automata_per_stage):
         print "Minimizing Automata"
         minimize_automata(automata)
 
-
         # Drawing automata graph
-        print "Drawing automata svg graph"
-        automata.draw_graph(anml_input_file + "_minimized_hw.svg")
+        #print "Drawing automata svg graph"
+        #automata.draw_graph(anml_input_file + "_minimized_hw.svg")
 
         # Register this automaton
         generator_ins.register_automata(atm=automata, use_compression=False)
@@ -91,13 +94,14 @@ def process_anml(bitwidth, input_anml_directory, automata_per_stage):
     shutil.rmtree(output_hdl_directory)
 
 
-def process_truthtable(bitwidth, input_anml_directory, automata_per_stage):
+def process_truthtable(bitwidth, input_directory, automata_per_stage):
+
 
     # This is the directory name to be created for HDL files
-    output_hdl_directory = input_anml_directory + '_' + str(bitwidth) + '_' + str(automata_per_stage)
+    output_hdl_directory = input_directory + '/' + str(bitwidth) + '_' + str(automata_per_stage)
 
     # Grab the input files
-    truthtable_input_files = glob.glob(input_anml_directory + '/*.tt')
+    truthtable_input_files = glob.glob(input_directory + '/*.tt')
     print "Truth Table Files: ", truthtable_input_files
 
     # Clean up directory
@@ -114,21 +118,36 @@ def process_truthtable(bitwidth, input_anml_directory, automata_per_stage):
 
     # Create a hardware Generator
     # for now, we'll only allow either symbolic or explicit automata; no mixing
-    generator_ins = hd_gen.HDL_Gen(path=os.path.join(output_hdl_directory, hdl_folder_name), before_match_reg=False,
+    generator_ins = hd_gen.HDL_Gen(path=hdl_folder_name, before_match_reg=False,
                                    after_match_reg=False, ste_type=1,
                                    total_input_len=dbw, symbolic=True)
 
 
-    # Iterate through the ANML files in the directory
+    # Iterate through the TruthTable files in the directory
     for index, truth_table_input_file in enumerate(truthtable_input_files):
-
-        # Assign each unique automaton its own unique name or the HDL generator won't work
-        automata.id = 'an{}'.format(index)
-
+ 
         # Build a Truthtable module with VerilogTools
-        VerilogTools.build_truthtable(truth_table_input_file, automata.id + '.v')
+        inputs, outputs = VerilogTools.build_truthtable(truth_table_input_file, hdl_folder_name + '/automata_tt_' + str(index) + '.v')
+
+        print "Inputs: ", inputs
+        print "Outputs: ", outputs
+
+        # for now, we will use this automata proxy
+        automata = Automatanetwork('tt_'+str(index), True, 1, 255)
+
+        new_node = S_T_E(start_type=StartType.non_start,
+                    is_report=True,
+                    is_marked=False,
+                    id=automata.get_new_id(),
+                    symbol_set=None,
+                    adjacent_S_T_E_s=None,
+                    report_residual=1,
+                    report_code=1)
+        
+        automata.add_element(new_node)
 
         # Register this automaton
+        # For now, this just builds the stages
         generator_ins.register_automata(atm=automata, use_compression=False)
 
         # We've got another batch of automata_per_stage automata to stage
@@ -147,16 +166,18 @@ def process_truthtable(bitwidth, input_anml_directory, automata_per_stage):
     shutil.rmtree(output_hdl_directory)
 
 
+# Entry point of the hardware generator
 if __name__ == '__main__':
     
     # Check the correct number of command line arguments
     if len(sys.argv) == 4:
         symbolic = False
+    # We now support symbolic automata hardware generation
     elif len(sys.argv) == 5 and sys.argv[4] == "--symbolic":
         symbolic = True
     else:
         print(usage())
-        exit(-1)
+        exit(1)
     
     # Bitwidth of the explicit automata
     if sys.argv[1].isdigit():
@@ -177,6 +198,6 @@ if __name__ == '__main__':
 
     # Process either Truth Tables or ANML files
     if symbolic:
-        process_truthtable(bdw, input_directory, automata_per_stage)
+        process_truthtable(dbw, input_directory, automata_per_stage)
     else:
-        process_anml(bdw, input_directory, automata_per_stage)
+        process_anml(dbw, input_directory, automata_per_stage)
