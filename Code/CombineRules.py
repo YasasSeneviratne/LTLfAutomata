@@ -17,7 +17,7 @@ import re
 # Get the usage string
 def usage():
     usage = "----------------- Usage ----------------\n"
-    usage += "./CombineRules.py <random seed> <number of rules> <number of patterns per rule> <number of variables> <output format> <log format> *<pattern files>"
+    usage += "./CombineRules.py <random seed> <number of rules> <number of patterns per rule> <number of variables> <output format> <log format> <dfa format> *<pattern files>"
     return usage
 
 def generate_rule(samples, new_vars, output_file, log_file):
@@ -54,11 +54,15 @@ def generate_rule(samples, new_vars, output_file, log_file):
         out.write("var2 " + ", ".join(vars_used) + ";\n")
         out.write(" & ".join(conjuncts) + ";\n")
 
+def is_satisfiable(dfa_file):
+    with open(dfa_file, 'r') as file:
+        return 'unsatisfiable' not in file.read()
+
 # Entry point
 if __name__ == '__main__':
 
     # Check the correct number of command line arguments
-    if len(sys.argv) < 7:
+    if len(sys.argv) < 8:
         print(usage())
         exit(-1)
 
@@ -68,14 +72,29 @@ if __name__ == '__main__':
     number_of_variables = int(sys.argv[4])
     output_format = sys.argv[5]
     log_format = sys.argv[6]
-    pattern_files = sys.argv[7:]
+    dfa_format = sys.argv[7]
+    pattern_files = sys.argv[8:]
 
     random.seed(random_seed)
     
     for i in range(number_of_rules):
         print("Rule %d" % i)
-        samples = [ pattern_files[random.randrange(len(pattern_files))] for _ in range(number_of_patterns_per_rule) ]
+
         new_vars = ['I%d' % i for i in range(number_of_variables)]
         output_file = output_format % i
         log_file = log_format % i
-        generate_rule(samples, new_vars, output_file, log_file)
+        dfa_file = dfa_format % i
+        satisfiable = False
+
+        while not satisfiable:
+            samples = [ pattern_files[random.randrange(len(pattern_files))] for _ in range(number_of_patterns_per_rule) ]
+            print("Generating formula...")
+            generate_rule(samples, new_vars, output_file, log_file)
+            print("Constructing DFA...")
+            os.system("mona -w -u %s > %s" % (output_file, dfa_file))
+            satisfiable = is_satisfiable(dfa_file)
+
+            if satisfiable:
+                print("Rule is satisfiable, moving on")
+            else:
+                print("Rule is unsatisfiable, trying again")

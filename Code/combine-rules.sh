@@ -32,9 +32,9 @@ seed=${RANDOM}
 
 echo "Generating rules (random seed: ${seed})..."
 
-python3 CombineRules.py ${seed} ${number_of_rules} ${number_of_patterns_per_rule} ${number_of_vars} ${output_format} ${log_format} ${input_format}
+python3 CombineRules.py ${seed} ${number_of_rules} ${number_of_patterns_per_rule} ${number_of_vars} ${output_format} ${log_format} ${dfa_format} ${input_format}
 
-python3 CombineRules.py ${seed} ${number_of_rules} ${number_of_patterns_per_rule} ${number_of_vars} ${reverse_output_format} ${reverse_log_format} ${reverse_input_format}
+python3 CombineRules.py ${seed} ${number_of_rules} ${number_of_patterns_per_rule} ${number_of_vars} ${reverse_output_format} ${reverse_log_format} ${reverse_dfa_format} ${reverse_input_format}
 
 echo "Checking diffs between logs (all diffs should be empty)..."
 
@@ -44,21 +44,6 @@ do
     log_file=$(printf "${log_format}" ${i})
     reverse_log_file=$(printf "${reverse_log_format}" ${i})
     diff ${log_file} ${reverse_log_file}
-done
-
-echo "Constructing DFAs..."
-
-for i in $(seq 0 $((number_of_rules - 1)))
-do
-    echo "DFA for rule ${i}..."
-    output_file=$(printf "${output_format}" ${i})
-    dfa_file=$(printf "${dfa_format}" ${i})
-    mona -xw -u ${output_file} > ${dfa_file}
-
-    echo "Reverse DFA for rule ${i}..."
-    reverse_output_file=$(printf "${reverse_output_format}" ${i})
-    reverse_dfa_file=$(printf "${reverse_dfa_format}" ${i})
-    mona -xw -u ${reverse_output_file} > ${reverse_dfa_file}
 done
 
 echo "Done!"
