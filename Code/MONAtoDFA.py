@@ -30,7 +30,7 @@ def usage():
 # Entry point
 if __name__ == '__main__':
 
-    verbose = True
+    verbose = False
     
     # Check the correct number of command line arguments
     if len(sys.argv) == 3:
@@ -48,8 +48,19 @@ if __name__ == '__main__':
     # Parse the mona file
     mona_data = Mona.parse_mona(mona_input, reverse=reverse, verbose=verbose)
 
-    # Generate a graph SVG file to visualize the DFA after removing unreachable states
-    PlotDFA.generate_graph(mona_data['transition_dict'], mona_data['initial_states'], mona_data['accepting_states'], "{}.svg".format(mona_input), verbose=verbose)
+    # Generate a graph SVG file to visualize the DFA after removing unreachable 
+    if verbose:
+        PlotDFA.generate_graph(mona_data['transition_dict'], mona_data['initial_states'], mona_data['accepting_states'], "{}.svg".format(mona_input), verbose=verbose)
 
     # Translate non-homogeneous automata into homogeneous automata
-    AutomataTools.make_homogeneous(mona_data, homogeneous_output)
+
+    # ADDED: We need to have ANML files with differing automata names
+    # to do this, we're going to use the filename of the mona input to name our automata
+    assert '.' in mona_input, "We expect the mona_input file ({}) to contain a .out or .rout".format(mona_input)
+    if '/' in mona_input:
+        filename = mona_input.split('/')[-1]
+    else:
+        filename = mona_input
+    automata_name = filename.split('.')[0]
+    #print(automata_name)
+    AutomataTools.make_homogeneous(mona_data, homogeneous_output, aId=automata_name)
