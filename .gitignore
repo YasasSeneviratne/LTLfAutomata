@@ -128,3 +128,7 @@ dmypy.json
 # Pyre type checker
 .pyre/
 Code/DFA_figure.svg
+
+#LTLAutomata directories we don't want to keep track of
+Examples/mona_outputs/combined
+Examples/mona_inputs/combined
