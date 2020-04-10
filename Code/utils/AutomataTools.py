@@ -21,7 +21,7 @@ def symbol_tuple_to_character_class(symbol_tuple):
 
 # A function for converting between non-homogeneous
 # and homogeneous automata
-def make_homogeneous(mona_data, filename, aId='an1'):
+def make_homogeneous(mona_data, filename, aId='an1', start_on_all=True):
 
     ste_count = 0
 
@@ -52,7 +52,10 @@ def make_homogeneous(mona_data, filename, aId='an1'):
         if symbol_tuple not in anml_states[dest]:
 
             if src in starting_states:
-                starting = Anml.AnmlDefs.ALL_INPUT
+                if start_on_all:
+                    starting = Anml.AnmlDefs.ALL_INPUT
+                else:
+                    starting = Anml.AnmlDefs.START_OF_DATA
             else:
                 starting = Anml.AnmlDefs.NO_START
             
