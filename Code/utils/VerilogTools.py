@@ -164,7 +164,7 @@ def parse_truth_tables(truth_table_data):
     return results
 
 
-def build_truthtable(truth_table_file, output_verilog_file):
+def build_truthtable(truth_table_file, module_name, output_verilog_file):
     """
     This function parses a truth table (.tt) file and generates
     custom primitive truthtable files.
@@ -192,7 +192,7 @@ def build_truthtable(truth_table_file, output_verilog_file):
         verilog_code += "\n"
 
     # Write out the module definition
-    verilog_code += make_module(truth_tables)
+    verilog_code += make_module(truth_tables, module_name)
 
     try:
         with open(output_verilog_file, 'w') as f:
@@ -331,7 +331,7 @@ def make_sequential_udp(truth_table):
     return verilog_code
 
 
-def make_module(truth_tables):
+def make_module(truth_tables, module_name):
     """
     This function generates the module interface for the symbolic
     finite state automaton.
@@ -349,7 +349,7 @@ def make_module(truth_tables):
         elif truth_table.type == TruthTableType.REPORTING:
             outputs.add(truth_table.header['output'])
 
-    verilog_code = "module TransitionTable({}, clk, run, rst, report);\n".format(', '.join(inputs))
+    verilog_code = "module {}}({}, clk, run, rst, report);\n".format(module_name, ', '.join(inputs))
     verilog_code += "\n"
     verilog_code += "\tinput {}, clk, run, rst;\n".format(', '.join(inputs))
     verilog_code += "\toutput wire {};\n".format(', '.join(outputs))
@@ -425,4 +425,4 @@ if __name__ == '__main__':
     tt_input = sys.argv[1] # This is the truth table input
     verilog_output = sys.argv[2] # This is the verilog output
 
-    build_truthtable(tt_input, verilog_output)
+    build_truthtable(tt_input, module_name, verilog_output)

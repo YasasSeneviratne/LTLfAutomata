@@ -75,6 +75,8 @@ def process_anml(bitwidth, input_directory, automata_per_stage):
         #print "Drawing automata svg graph"
         #automata.draw_graph(anml_input_file + "_minimized_hw.svg")
 
+        #print "Filename: ", anml_input_file
+
         # Register this automaton
         generator_ins.register_automata(atm=automata, use_compression=False)
 
@@ -127,13 +129,18 @@ def process_truthtable(bitwidth, input_directory, automata_per_stage):
     for index, truth_table_input_file in enumerate(truthtable_input_files):
  
         # Build a Truthtable module with VerilogTools
-        inputs, outputs = VerilogTools.build_truthtable(truth_table_input_file, hdl_folder_name + '/automata_tt_' + str(index) + '.v')
+        module_name = 'Automata_tt_' + str(index)
+        verilog_filename = hdl_folder_name + '/automata_tt_' + str(index) + '.sv'
+
+        print truth_table_input_file, module_name, verilog_filename
+
+        inputs, outputs = VerilogTools.build_truthtable(truth_table_input_file, module_name, verilog_filename)
 
         print "Inputs: ", inputs
         print "Outputs: ", outputs
 
         # for now, we will use this automata proxy
-        automata = Automatanetwork('tt_'+str(index), True, 1, 255)
+        automata = Automatanetwork('tt_'+str(index), True, 1, 255, inputs=inputs)
 
         new_node = S_T_E(start_type=StartType.non_start,
                     is_report=True,

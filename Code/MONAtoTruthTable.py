@@ -44,7 +44,7 @@ if __name__ == '__main__':
 
     # Parse the mona file
     mona_data = Mona.parse_mona(mona_input, reverse=reverse, verbose=verbose)
-    
+
     # Generate the truth tables
     if reverse:
         tables = TruthTable.from_nfa(mona_data)
