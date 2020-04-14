@@ -4,12 +4,46 @@
 # pattern and its reverse as well as capture the number of states produced by the resulting DFA
 # This is based on LTLfAutomata/code/make-anml-from-rules.sh
 
-for directory in ./patterns/*/; do
-	echo $directory	
-	cd $directory
-	for file in *.num_states; do 	
-		echo $file
-		cat $file
-	done
-	cd ../..
+# The one argument is the directory to do this in
+
+pushd $PWD
+
+cd $1
+
+for directory in ./combined_10*/; do
+        echo $directory 
+        cd $directory
+
+        totalstates=0
+
+        # cd into anml
+        cd anml
+        echo "DFA Results"
+        for file in *.anml; do
+                #echo $file
+                num_states=$(~/src/VASim/vasim $file | grep -m 1 Elements:)
+                numstates="${num_states#*:}"
+                numstates=$((numstates))
+                #echo "NumStates:$numstates"
+                totalstates=$((totalstates + $numstates))
+        done
+
+        echo "Total States:$totalstates"
+
+        cd ../ranml
+        echo "NFA Results"
+        for file in *.anml; do
+                #echo $file
+                num_states=$(~/src/VASim/vasim $file | grep -m 1 Elements:)
+                numstates="${num_states#*:}"
+                numstates=$((numstates))
+                #echo "NumStates:$numstates"
+                totalstates=$((totalstates + $numstates))
+        done
+
+        echo "Total States:$totalstates"
+
+        cd ../..
 done
+
+popd
