@@ -1,6 +1,9 @@
 #!/bin/bash
 
-symbol_bit_width=100
+if [ $# -ne 1 ] ; then echo "Arguments expected: <Symbol Bit Width>" ; exit; fi
+
+
+symbol_bit_width=$(($1))
 
 for num_automata in 10 100 1000 10000
 do
@@ -13,11 +16,15 @@ do
 
     explicittask(){
         echo "Running Explicit Hardware Generator"
+        rm -fr $2/*explicit*
+        rm -f $2/*.zip
         ~/src/LTLfAutomata/Code/APSim/Generate_Hardware.py $1 $2 $3
     }
 
     symbolictask(){
         echo "Running Symbolic Hardware Generator"
+        rm -fr $2/*symbolic*
+        rm -f $2/*.zip
         ~/src/LTLfAutomata/Code/APSim/Generate_Hardware.py $1 $2 $3 --symbolic
     }
 
