@@ -39,7 +39,7 @@ def process_anml(bitwidth, input_directory, automata_per_stage):
     # This is the directory name to be created for HDL files
     output_hdl_directory = input_directory + '/' + str(bitwidth) + '_' + str(automata_per_stage)
 
-    anml_input_files = glob.glob(input_directory + '/*.anml')
+    anml_input_files = glob.glob(input_directory + '/rule*.anml_non_min.anml')
     print "ANML Files: ", anml_input_files
 
     # Clean up directory
@@ -63,13 +63,17 @@ def process_anml(bitwidth, input_directory, automata_per_stage):
 
     # Iterate through the ANML files in the directory
     for index, anml_input_file in enumerate(anml_input_files):
+
+        print "Parsing Automata: {}".format(anml_input_file)
         
         # Parse the ANML file
         automata = atma.parse_anml_file(anml_input_file)
 
         # Minimizing the automata with NFA heuristics
-        print "Minimizing Automata"
+        print "Minimizing Automata: {}".format(anml_input_file)
         minimize_automata(automata)
+
+        #print "Number of nodes: ", automata.node_count
 
         # Drawing automata graph
         #print "Drawing automata svg graph"
