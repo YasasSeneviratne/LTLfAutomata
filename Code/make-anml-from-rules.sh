@@ -19,10 +19,9 @@ do
         for i in $(eval echo {$1..$2});
         do
             ./MONAtoDFA.py ${input_dir}/rule${i}.out ${anml_dir}/rule${i}.anml
-            ./MONAtoDFA.py ${input_dir}/rule${i}.rout ${ranml_dir}/rule${i}.anml
+            ./MONAtoDFA.py ${input_dir}/rule${i}.rout ${ranml_dir}/rule${i}.anml --reverse
         done
     }
-
 
     max_thread_id=$((threads - 1))
     # We don't have a ceiling function, so let's use this math trick
