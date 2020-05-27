@@ -1,15 +1,18 @@
 #!/bin/bash
 
-target1="52.91.197.145" # for dfas
+if [ $# -ne 1 ] ; then echo "Arguments expected: <number of variables>" ; exit; fi
+
+# Important: set the IP Addresses to each target to parallelize
+target1="54.91.92.124" # for dfas
 target2="34.235.26.149" #for tts
-target3="54.227.120.68" #for rtts
-target4="34.234.83.253" #for nfas
+target3="3.84.179.238" #for rtts
+target4="54.242.102.31" #for nfas
 
-number_of_vars=100
+number_of_vars=$(($1))
 
-for num_automata in 10 100 #1000 10000
+for num_automata in 10 100 1000 10000
 do
-    echo "Generating ${automata} automata"
+    echo "Deploying ${automata} automata"
 
     anml_dir="../Examples/mona_outputs/combined_${num_automata}/anml"
     ranml_dir="../ranml"
