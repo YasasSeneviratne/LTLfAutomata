@@ -1,9 +1,13 @@
 #!/bin/bash
 
+# Added number of patterns per rule and number of variables
+
+if [ $# -ne 2 ] ; then echo "Arguments expected: <number of patterns per rule> <number of variables>" ; exit; fi
+
 for number_of_rules in 10 100 1000 10000
 do
-    number_of_patterns_per_rule=1
-    number_of_vars=10
+	number_of_patterns_per_rule=$(($1))
+	number_of_vars=$(($2))
 
     input_dir="../Examples/mona_inputs/patterns"
     output_dir="../Examples/mona_inputs/combined_${number_of_rules}"
