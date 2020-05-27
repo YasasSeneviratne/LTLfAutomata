@@ -7,7 +7,7 @@ import re
 
 # Parse the MONA file for automata
 # Symbol sets the transition to symbols instead of bit vectors
-def parse_mona(mona_file, translate_table='signal_to_symbol_translation.txt', reverse=False, remove_unreachable=True, verbose=False):
+def parse_mona(mona_file, translate_table='signal_to_symbol_translation.txt', reverse=False, remove_unreachable=True, verbose=True):
     
     # Read the entire MONA File
     mona_content = None
@@ -116,9 +116,15 @@ def parse_mona(mona_file, translate_table='signal_to_symbol_translation.txt', re
     except ValueError:
         print('Mona File {} does not contain a transition it should'.format(mona_file))
 
+    #for k, v in mona_data.items():
+    #    print(str(k) + ": " + str(v))
+
     # Remove unreachable states from the MONA-generated DFA
     if remove_unreachable:
         remove_unreachable_states(mona_data)
+    
+    #for k, v in mona_data.items():
+    #    print(str(k) + ": " + str(v))
     
     # Reverse the automaton if reverse flag was set
     if reverse:
@@ -126,9 +132,9 @@ def parse_mona(mona_file, translate_table='signal_to_symbol_translation.txt', re
     
     # Print the parsed data for debugging
     if verbose:
-        print("Parsed MONA DFA Information")
-        for k, v in mona_data.items():
-            print('\t' + str(k) + ": " + str(v))
+        print("Parsed MONA DFA Information from {}".format(mona_file))
+        #for k, v in mona_data.items():
+        #    print('\t' + str(k) + ": " + str(v))
 
     # Populate the translation table
     if translate_table:
@@ -270,6 +276,15 @@ def remove_unreachable_states(mona_data):
             for (source, dest), label in transition_dict.items()
                 if source != state and dest != state}
 
+    # Decrements a state name if the value < filter state
+    def filter_and_transform(state, filter_state):
+        return str((int(state) - 1)) if int(state) > int(filter_state) else str(state)
+
+    # decrement state name
+    def decrement_state_name(transition_dict, state):
+        return {(filter_and_transform(source, state), filter_and_transform(dest, state)): label
+            for (source, dest), label in transition_dict.items()}
+
     states_to_remove = []
 
     # As per convention, only rejecting states can be unreachable
@@ -293,16 +308,24 @@ def remove_unreachable_states(mona_data):
         # Remove state from states
         assert state in mona_data['states']
         mona_data['states'].remove(state)
+        mona_data['states'] = [filter_and_transform(state_i, state) for state_i in mona_data['states']]
 
         # Reduce num_states by one
         mona_data['num_states'] -= 1
 
-        # Remove from rejecting states
+        # Remove unreachable state and update rejecting states
         assert state in mona_data['rejecting_states']
         mona_data['rejecting_states'].remove(state)
+        mona_data['rejecting_states'] = set([filter_and_transform(state_i, state) for state_i in mona_data['rejecting_states']])
 
-        # Remove all relevant transitions
+        # Remove unreachable state and update relevant transitions
         mona_data['transition_dict'] = remove_state_from_transition_dict(mona_data['transition_dict'], state)
+        mona_data['transition_dict'] = decrement_state_name(mona_data['transition_dict'], state)
             
-            
+        # Remove unreachable state and update dont_care transitions
+        if state in mona_data['dont_care_states']:
+            mona_data['dont_care_states'].remove(state)
+        mona_data['dont_care_states'] = set([filter_and_transform(state_i, state) for state_i in mona_data['dont_care_states']])
 
+        #Update Accepting states
+        mona_data['accepting_states'] = [filter_and_transform(state_i, state) for state_i in mona_data['accepting_states']]
