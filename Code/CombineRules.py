@@ -17,10 +17,10 @@ import re
 # Get the usage string
 def usage():
     usage = "----------------- Usage ----------------\n"
-    usage += "./CombineRules.py <random seed> <number of rules> <number of patterns per rule> <number of variables> <output format> <log format> <dfa format> *<pattern files>"
+    usage += "./CombineRules.py <operator> <random seed> <number of rules> <number of patterns per rule> <number of variables> <output format> <log format> <dfa format> *<pattern files>"
     return usage
 
-def generate_rule(samples, new_vars, output_file, log_file):
+def generate_rule(samples, new_vars, output_file, log_file, operator):
     vars_used = set()
     conjuncts = []
     
@@ -52,7 +52,7 @@ def generate_rule(samples, new_vars, output_file, log_file):
     with open(output_file, 'w') as out:
         out.write("m2l-str;\n")
         out.write("var2 " + ", ".join(vars_used) + ";\n")
-        out.write(" & ".join(conjuncts) + ";\n")
+        out.write((" " + operator + " ".join(conjuncts) + ";\n")
 
 def is_satisfiable(dfa_file):
     with open(dfa_file, 'r') as file:
@@ -66,14 +66,15 @@ if __name__ == '__main__':
         print(usage())
         exit(-1)
 
-    random_seed = int(sys.argv[1])
-    number_of_rules = int(sys.argv[2])
-    number_of_patterns_per_rule = int(sys.argv[3])
-    number_of_variables = int(sys.argv[4])
-    output_format = sys.argv[5]
-    log_format = sys.argv[6]
-    dfa_format = sys.argv[7]
-    pattern_files = sys.argv[8:]
+    operator = sys.argv[1]
+    random_seed = int(sys.argv[2])
+    number_of_rules = int(sys.argv[3])
+    number_of_patterns_per_rule = int(sys.argv[4])
+    number_of_variables = int(sys.argv[5])
+    output_format = sys.argv[6]
+    log_format = sys.argv[7]
+    dfa_format = sys.argv[8]
+    pattern_files = sys.argv[9:]
 
     random.seed(random_seed)
     
@@ -89,7 +90,7 @@ if __name__ == '__main__':
         while not satisfiable:
             samples = [ pattern_files[random.randrange(len(pattern_files))] for _ in range(number_of_patterns_per_rule) ]
             print("Generating formula...")
-            generate_rule(samples, new_vars, output_file, log_file)
+            generate_rule(samples, new_vars, output_file, log_file, operator)
             print("Constructing DFA...")
             os.system("mona -w -u %s > %s" % (output_file, dfa_file))
             satisfiable = is_satisfiable(dfa_file)

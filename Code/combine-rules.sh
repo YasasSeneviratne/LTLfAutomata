@@ -5,8 +5,8 @@ number_of_patterns_per_rule=3
 number_of_vars=10
 
 input_dir="../Examples/mona_inputs/patterns"
-output_dir="../Examples/mona_inputs/combined"
-dfa_dir="../Examples/mona_outputs/combined"
+output_dir="../Examples/mona_inputs/combined-disjunct"
+dfa_dir="../Examples/mona_outputs/combined-disjunct"
 
 mkdir -p ${output_dir}
 mkdir -p ${dfa_dir}
@@ -28,13 +28,15 @@ dfa_prefix="${dfa_dir}/rule%d"
 dfa_format="${dfa_prefix}.out"
 reverse_dfa_format="${dfa_prefix}.rout"
 
+operator="|"
+
 seed=${RANDOM}
 
 echo "Generating rules (random seed: ${seed})..."
 
-python3 CombineRules.py ${seed} ${number_of_rules} ${number_of_patterns_per_rule} ${number_of_vars} ${output_format} ${log_format} ${dfa_format} ${input_format}
+python3 CombineRules.py ${operator} ${seed} ${number_of_rules} ${number_of_patterns_per_rule} ${number_of_vars} ${output_format} ${log_format} ${dfa_format} ${input_format}
 
-python3 CombineRules.py ${seed} ${number_of_rules} ${number_of_patterns_per_rule} ${number_of_vars} ${reverse_output_format} ${reverse_log_format} ${reverse_dfa_format} ${reverse_input_format}
+python3 CombineRules.py ${operator} ${seed} ${number_of_rules} ${number_of_patterns_per_rule} ${number_of_vars} ${reverse_output_format} ${reverse_log_format} ${reverse_dfa_format} ${reverse_input_format}
 
 echo "Checking diffs between logs (all diffs should be empty)..."
 
