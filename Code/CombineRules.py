@@ -52,7 +52,7 @@ def generate_rule(samples, new_vars, output_file, log_file, operator):
     with open(output_file, 'w') as out:
         out.write("m2l-str;\n")
         out.write("var2 " + ", ".join(vars_used) + ";\n")
-        out.write((" " + operator + " ".join(conjuncts) + ";\n")
+        out.write(" " + operator + " ".join(conjuncts) + ";\n")
 
 def is_satisfiable(dfa_file):
     with open(dfa_file, 'r') as file:
