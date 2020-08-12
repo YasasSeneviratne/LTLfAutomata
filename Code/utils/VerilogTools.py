@@ -192,7 +192,8 @@ def build_truthtable(truth_table_file, module_name, output_verilog_file):
         verilog_code += "\n"
 
     # Write out the module definition
-    verilog_code += make_module(truth_tables, module_name)
+    inputs, vc = make_module(truth_tables, module_name)
+    verilog_code += vc
 
     try:
         with open(output_verilog_file, 'w') as f:
@@ -203,6 +204,7 @@ def build_truthtable(truth_table_file, module_name, output_verilog_file):
         print("\tException: ", e)
         exit(-1)
 
+    return inputs
 
 def make_combinationatorial_udp(truth_table):
     """
@@ -349,9 +351,13 @@ def make_module(truth_tables, module_name):
         elif truth_table.type == TruthTableType.REPORTING:
             outputs.add(truth_table.header['output'])
 
-    verilog_code = "module {}}({}, clk, run, rst, report);\n".format(module_name, ', '.join(inputs))
+    module_inputs = list(inputs)
+
+    print "Module Inputs: ", module_inputs
+
+    verilog_code = "module {}}({}, clk, run, rst, report);\n".format(module_name, ', '.join(module_inputs))
     verilog_code += "\n"
-    verilog_code += "\tinput {}, clk, run, rst;\n".format(', '.join(inputs))
+    verilog_code += "\tinput {}, clk, run, rst;\n".format(', '.join(module_inputs))
     verilog_code += "\toutput wire {};\n".format(', '.join(outputs))
     verilog_code += "\twire {};\n".format(', '.join(wires))
     verilog_code += "\n"
@@ -404,7 +410,7 @@ def make_module(truth_tables, module_name):
 
     verilog_code += "endmodule\n"
 
-    return verilog_code
+    return module_inputs, verilog_code
 
 # Get the usage string
 def usage():
@@ -425,4 +431,6 @@ if __name__ == '__main__':
     tt_input = sys.argv[1] # This is the truth table input
     verilog_output = sys.argv[2] # This is the verilog output
 
-    build_truthtable(tt_input, module_name, verilog_output)
+    inputs = build_truthtable(tt_input, module_name, verilog_output)
+
+    return inputs
