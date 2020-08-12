@@ -1,9 +1,17 @@
 #!/bin/bash
 
 #Comment: This script has been multi-threaded; make sure the below variables are set correctly
+# Also make sure that you have chosen the correct base_dir for the experiment you're looking to run
 
-input_dir="../Examples/mona_outputs/combined"
-anml_dir="../Examples/mona_outputs/combined/anml"
+# This base dir is for conjunctions
+#base_dir="../Examples/mona_outputs/combined"
+
+# This base dir is for disjunctions
+base_dir="../Examples/mona_outputs/combined-disjunct"
+
+input_dir=${base_dir}
+anml_dir=${base_dir}/anml
+
 threads=10
 num_automata=100 
 
