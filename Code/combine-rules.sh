@@ -1,13 +1,18 @@
 #!/bin/bash
 
-# Added number of patterns per rule and number of variables
+# This script is responsible for combining LTL patterns into more complex LTL formulas
+# The two arguments to this scripts are:
+#     - number of patterns per rule: This is the number of patterns to be combined
+#     - number of variables: This is the number of shared variables among the patterns
+# IMPORTANT NOTE: There is an operator variable below that sets the operation used for combining patterns into formulas
 
 if [ $# -ne 2 ] ; then echo "Arguments expected: <number of patterns per rule> <number of variables>" ; exit; fi
 
 for number_of_rules in 10 100 1000 10000
 do
-	number_of_patterns_per_rule=$(($1))
-	number_of_vars=$(($2))
+
+    number_of_patterns_per_rule=$(($1))
+    number_of_vars=$(($2))
 
     input_dir="../Examples/mona_inputs/patterns"
     output_dir="../Examples/mona_inputs/combined_${number_of_rules}"
@@ -29,6 +34,8 @@ do
     log_format="${output_prefix}.log"
     reverse_log_format="${output_prefix}.rlog"
 
+    operator="|"
+
     dfa_prefix="${dfa_dir}/rule%d"
     dfa_format="${dfa_prefix}.out"
     reverse_dfa_format="${dfa_prefix}.rout"
@@ -37,9 +44,10 @@ do
 
     echo "Generating rules (random seed: ${seed})..."
 
-    python3 CombineRules.py ${seed} ${number_of_rules} ${number_of_patterns_per_rule} ${number_of_vars} ${output_format} ${log_format} ${dfa_format} ${input_format}
+    python3 CombineRules.py ${operator} ${seed} ${number_of_rules} ${number_of_patterns_per_rule} ${number_of_vars} ${output_format} ${log_format} ${dfa_format} ${input_format}
 
-    python3 CombineRules.py ${seed} ${number_of_rules} ${number_of_patterns_per_rule} ${number_of_vars} ${reverse_output_format} ${reverse_log_format} ${reverse_dfa_format} ${reverse_input_format}
+    python3 CombineRules.py ${operator} ${seed} ${number_of_rules} ${number_of_patterns_per_rule} ${number_of_vars} ${reverse_output_format} ${reverse_log_format} ${reverse_dfa_format} ${reverse_input_format}
+
 
     echo "Checking diffs between logs (all diffs should be empty)..."
 

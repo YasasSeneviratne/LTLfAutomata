@@ -1,20 +1,26 @@
 #!/bin/bash
 
+# This script is responsible for zipping up our HDL Verilog and sending it to AWS nodes where it will be synthesized and place/routed
+# The single argument for this script is the bit-width of the design
+#     - bitwidth: The bitwidth of the automata design; for these experiments this number is always 8
+# IMPORTANT NOTE: It is important to set all of the target IP addresses below to valid EC2 instances with F1 AFI
+# Also make sure that you have the correct directory structure on the target instance so the SCP is successful
+
 if [ $# -ne 1 ] ; then echo "Arguments expected: <number of variables>" ; exit; fi
 
 # Important: set the IP Addresses to each target to parallelize
-target1="54.91.92.124" # for dfas
+target1="34.235.26.149" # for dfas
 target2="34.235.26.149" #for tts
-target3="3.84.179.238" #for rtts
-target4="54.242.102.31" #for nfas
+target3="54.90.126.237" #for rtts
+target4="54.84.210.184" #for nfas
 
 number_of_vars=$(($1))
 
-for num_automata in 10 100 1000 10000
+for num_automata in 100 100 1000 10000
 do
     echo "Deploying ${automata} automata"
 
-    anml_dir="../Examples/mona_outputs/combined_${num_automata}/anml"
+    anml_dir="../Examples/mona_outputs/10vars_disjunct/5_vars/run_2/combined_${num_automata}/anml"
     ranml_dir="../ranml"
     tt_dir="../tt"
     rtt_dir="../rtt"

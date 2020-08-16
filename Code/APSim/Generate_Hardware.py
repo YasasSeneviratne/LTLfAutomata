@@ -45,7 +45,6 @@ def process_anml(bitwidth, input_directory, automata_per_stage):
     output_hdl_directory = input_directory + '/' + str(bitwidth) + '_' + str(automata_per_stage)
 
     anml_input_files = glob.glob(input_directory + '/*.anml')
-    print("ANML Files: ", anml_input_files)
 
     # Clean up directory
     shutil.rmtree(output_hdl_directory, ignore_errors=True)
@@ -56,8 +55,6 @@ def process_anml(bitwidth, input_directory, automata_per_stage):
                                                 stride_value=0, before_match_reg=False,
                                                 after_match_reg=False, ste_type=1, use_bram=False,
                                                 use_compression=False, compression_depth=-1, symbolic=False)
-    hdl_folder_name += '_greater_than_100_states'         
-    print("Folder name to store the HDLs: ", hdl_folder_name)
 
     # Create a hardware Generator
     generator_ins = hd_gen.HDL_Gen(path=hdl_folder_name, before_match_reg=False,
@@ -65,36 +62,14 @@ def process_anml(bitwidth, input_directory, automata_per_stage):
                                    total_input_len=dbw, symbolic=False)
 
 
-    automata_count = 0
-
     # Iterate through the ANML files in the directory
     for index, anml_input_file in enumerate(anml_input_files):
-
-        # if index % 2 == 0:
-        #     if not even:
-        #         continue
-        # else:
-        #     if not odd:
-        #         continue
 
         # Grab the automata file number
         automata_number = re.search('\d+', anml_input_file).group(0)
 
-        print("Parsing Automata: {}".format(anml_input_file))
-        
         # Parse the ANML file
         automata = atma.parse_anml_file(anml_input_file)
-
-        # print "Converting to bitwise automaton"
-        # bitwise_automata = atma.automata_network.get_bit_automaton(automata, original_bit_width=8)
-
-        # print "Converting to {}-strided automaton".format(dbw)
-        # automata_with_set_bw = atma.automata_network.get_strided_automata2(atm=bitwise_automata,
-        #     stride_value = dbw,
-        #     is_scalar=True,
-        #     base_value=2,
-        #     add_residual=True
-        # )
 
         if dbw == 16:
             print "Doing 16-bit!"
@@ -109,28 +84,19 @@ def process_anml(bitwidth, input_directory, automata_per_stage):
             print "Converting to homogeneous automaton"
             automata_with_set_bw.make_homogenous()
 
-
         # Minimizing the automata with NFA heuristics
         if minimize:
-            print("Minimizing Automata: {}".format(anml_input_file))
             minimize_automata(automata_with_set_bw)
             #atma.generate_anml_file(anml_input_file + "_min.anml", automata)
         else:
             print("No minimization of Automata")
 
         # Drawing automata graph
-
         if drawing:
             print "Drawing automata svg graph"
             automata_with_set_bw.draw_graph(anml_input_file + "_minimized_hw.svg")
         
-        # if automata_with_set_bw.nodes_count <= 100:
-        #     continue
-        # else:
-        #     automata_count += 1
-        
         automata_info.append('{},{},{}\n'.format(automata_number, str(automata_with_set_bw.nodes_count), str(automata_with_set_bw.edges_count)))
-
 
         # # Register this automaton
         generator_ins.register_automata(atm=automata_with_set_bw, use_compression=False)
@@ -141,7 +107,7 @@ def process_anml(bitwidth, input_directory, automata_per_stage):
 
     # DO we need this? maybe if our number of automata is not a perfect multiple
     # of automata_per_stage?
-    #generator_ins.register_stage_pending(single_out=False, use_bram=False)
+    generator_ins.register_stage_pending(single_out=False, use_bram=False)
 
     #Finalize and wrap up HDL in archive folder
     generator_ins.finilize()
@@ -157,7 +123,6 @@ def process_anml(bitwidth, input_directory, automata_per_stage):
         for automata_string in automata_info:
             output_file.write(automata_string)
 
-    print "Automata Count: ", automata_count
 
 def process_truthtable(bitwidth, input_directory, automata_per_stage):
 
@@ -199,8 +164,6 @@ def process_truthtable(bitwidth, input_directory, automata_per_stage):
 
         inputs, outputs = VerilogTools.build_truthtable(truth_table_input_file, module_name, verilog_filename)
 
-        print("Inputs: ", inputs)
-        print("Outputs: ", outputs)
 
         # for now, we will use this automata proxy
         automata = Automatanetwork('tt_'+str(index), True, 1, 255, inputs=inputs)
@@ -268,6 +231,7 @@ if __name__ == '__main__':
 
     # Process either Truth Tables or ANML files
     if symbolic:
+        print "Processing Truth Tables"
         process_truthtable(dbw, input_directory, automata_per_stage)
     else:
         print "Processing ANML"

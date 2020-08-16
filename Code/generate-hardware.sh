@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# This script is responsible for generating HDL hardware for explicit automata (ANML and RANML) and truth tables (TTs and RTTs)
+# It has one argument which is the symbol bit width:
+#      - Symbol bit Width: 8
+
+
 if [ $# -ne 1 ] ; then echo "Arguments expected: <Symbol Bit Width>" ; exit; fi
 
 
