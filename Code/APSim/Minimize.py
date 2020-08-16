@@ -17,7 +17,6 @@ import sys, os
 import shutil
 from automata.utility.utility import minimize_automata
 import automata.HDL.hdl_generator as hd_gen
-from multiprocessing.dummy import Pool as ThreadPool
 
 # Get the usage string
 def usage():
@@ -41,7 +40,7 @@ if __name__ == '__main__':
     # Drawing automata before minimizing
     #print "Drawing non-minimized automata svg graph"
     #print automata.get_summary(logo=" of the homogeneous, automata")
-    automata.draw_graph(anml_input_file + "_non_min.svg")
+    #automata.draw_graph(anml_input_file + "_non_min.svg")
     atma.generate_anml_file(anml_input_file + "_non_min.anml", automata)
 
     #print "The automata {} homogeneous!".format('is' if automata.is_homogeneous else 'is not')
@@ -52,6 +51,6 @@ if __name__ == '__main__':
 
     # Drawing automata graph
     #print "Drawing automata svg graph"
-    automata.draw_graph(anml_input_file + "_min.svg")
+    #automata.draw_graph(anml_input_file + "_min.svg")
 
     atma.generate_anml_file(anml_input_file + "_min.anml", automata)

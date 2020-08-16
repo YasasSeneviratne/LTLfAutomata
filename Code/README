@@ -1,0 +1,16 @@
+To run experiments:
+
+1. Combine patterns into larger formulas with the combine_rules.sh script.
+This script generates a set of formulas by combining patterns with conjunctions or disjunctions (parameter in the script).
+
+2a. Generate ANML (discrete) automata with the make-anml-from-rules.sh script.
+This script iterates through each generated formula and generates a DFA (ANML) and NFA (RANML) for each formula.
+
+2b. Generate Transition Table (symbolic) automata with the make-tt-from-rules.sh script.
+This script iterates through each generated formula and generates a DFA (tt) and NFA (rtt) for each formula.
+
+3. Generate Hardware in the form of Verilog Hardware Description Language with the Generate_Hardware.sh script.
+This script iterates through each generated ANML, RANML, TT, and RTT directory and generates Verilog for each with the help of Grapefruit.
+
+4. Deploy Hardware to the AWS cloud with the deploy-hardware.sh script.
+This script zips up all of the generated Verilog and sends it to AWS instances where it can be compiled in parallel. 
