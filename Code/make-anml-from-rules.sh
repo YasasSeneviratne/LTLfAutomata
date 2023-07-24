@@ -5,38 +5,40 @@
 # IMPORTANT NOTE: This code is multi-threaded; make sure the threads variable below has a reasonable value for your computing resources
 
 threads=10
+cluster=$3
+numfiles=$(($2-1))
+echo $numfiles
+input_dir="$1"
+anml_dir="$1/anml"
+ranml_dir="$1/ranml"
 
-for num_automata in 10 100 1000 10000
-do
-    input_dir="../Examples/mona_outputs/combined_${num_automata}"
-    anml_dir="../Examples/mona_outputs/combined_${num_automata}/anml"
-    ranml_dir="../Examples/mona_outputs/combined_${num_automata}/ranml"
+mkdir -p ${anml_dir}
+mkdir -p ${ranml_dir}
 
-    mkdir -p ${anml_dir}
-    mkdir -p ${ranml_dir}
 
-    # The task is responsible for generating ANML files from out and rout MONA outputs
-    task(){
-        echo "Running rules from $1 to $2"
-        for i in $(eval echo {$1..$2});
-        do
-            ./MONAtoDFA.py ${input_dir}/rule${i}.out ${anml_dir}/rule${i}.anml
-            ./MONAtoDFA.py ${input_dir}/rule${i}.rout ${ranml_dir}/rule${i}.anml --reverse
-        done
-    }
-
-    max_thread_id=$((threads - 1))
-    # We don't have a ceiling function, so let's use this math trick
-    automata_per_thread=$(((num_automata + threads - 1)/threads))
-
-    last_automata=$((num_automata - 1))
-    for i in $(eval echo {0..$max_thread_id});
+if [ $# -ne 3 ] ; then echo "Arguments expected: <path to mona output> <# of input files> <cluster id>" ; exit; fi  
+# The task is responsible for generating ANML files from out and rout MONA outputs
+task(){
+    echo "Running rules for dirctory $1"
+    for i in $(eval echo {0..$numfiles});
     do
-        start=$((i * automata_per_thread))
-        end=$((start + automata_per_thread - 1))
-        end=$((end>last_automata ? last_automata : end))
-        task ${start} ${end} &
+        ./MONAtoDFA.py ${input_dir}/ltl${i}c${cluster}.out ${anml_dir}/ltl${i}c${cluster}.anml
+        ./MONAtoDFA.py ${input_dir}/ltl${i}c${cluster}.rout ${ranml_dir}/ltl${i}c${cluster}.anml --reverse
     done
+}
 
-    wait
+max_thread_id=$((threads - 1))
+# We don't have a ceiling function, so let's use this math trick
+automata_per_thread=$(((num_automata + threads - 1)/threads))
+
+last_automata=$((num_automata - 1))
+for i in $(eval echo {0..$max_thread_id});
+do
+    start=$((i * automata_per_thread))
+    end=$((start + automata_per_thread - 1))
+    end=$((end>last_automata ? last_automata : end))
+    task ${start} ${end} &
 done
+
+wait
+

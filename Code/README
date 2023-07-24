@@ -4,12 +4,15 @@ To run experiments:
 This script generates a set of formulas by combining patterns with conjunctions or disjunctions (parameter in the script).
 
 2a. Generate ANML (discrete) automata with the make-anml-from-rules.sh script.
+make-anml-from-rules.sh  <path to mona output> <# of input files> <cluster id>
 This script iterates through each generated formula and generates a DFA (ANML) and NFA (RANML) for each formula.
 
 2b. Generate Transition Table (symbolic) automata with the make-tt-from-rules.sh script.
+make-tt-from-rules.sh <directory containing mona outputs>
 This script iterates through each generated formula and generates a DFA (tt) and NFA (rtt) for each formula.
 
-3. Generate Hardware in the form of Verilog Hardware Description Language with the Generate_Hardware.sh script.
+3. Generate Hardware in the form of Verilog Hardware Description Language with the generate_Hardware.sh script.
+generate_Hardware.sh <folder containing anml,ranml, tt, and rtt folders> <bits per state, minimum must be 8> <number of rule files>
 This script iterates through each generated ANML, RANML, TT, and RTT directory and generates Verilog for each with the help of Grapefruit.
 
 4. Deploy Hardware to the AWS cloud with the deploy-hardware.sh script.
